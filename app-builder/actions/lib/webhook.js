@@ -156,7 +156,8 @@ function orderEntityIdOf(payload) {
       queue.push(...node.filter((x) => x && typeof x === 'object'));
     }
   }
-  const id = payload?.data?.id ?? payload?.data?.order_id ?? payload?.data?.entity_id;
+  // SaaS plugin payloads have no "data" wrapper, e.g. cancel (after) = { id: "40", result, subject }
+  const id = payload?.id ?? payload?.data?.id ?? payload?.data?.order_id ?? payload?.data?.entity_id;
   return id !== undefined && id !== null && /^\d+$/.test(String(id)) ? String(id) : null;
 }
 

@@ -146,7 +146,8 @@ describe('webhook-order-placed / webhook-order-cancel', () => {
     expect((await placed.main(hookParams(order))).body).toEqual({ op: 'success' });
     expect(await agenda.getReservation(r.id)).toMatchObject({ status: 'confirmed', orderId: '000000124' });
 
-    const cancelPayload = { eventName: 'plugin.sales.api.order_management.cancel', data: { id: 77 } };
+    // real SaaS shape (captured by the diagnostics): no "data" wrapper, id as a string
+    const cancelPayload = { id: '77', result: true, subject: [] };
     expect((await cancel.main(hookParams(cancelPayload))).body).toEqual({ op: 'success' });
     expect(await agenda.getReservation(r.id)).toBeNull();
     // the shift is bookable again
