@@ -20,7 +20,10 @@ function respond(op) {
   return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: op };
 }
 const success = () => respond({ op: 'success' });
-const exception = (message) => respond({ op: 'exception', message });
+// explicit LocalizedException so Commerce shows our message instead of its generic server error
+const exception = (message) => respond({
+  op: 'exception', type: 'Magento\\Framework\\Exception\\LocalizedException', message,
+});
 
 function normalizeKey(key) {
   if (!key) return '';
