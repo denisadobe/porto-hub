@@ -138,7 +138,27 @@ function bookingsOf(payload) {
   return findItems(payload).map((item) => ({ sku: item.sku, reservationId: reservationIdOf(item) }));
 }
 
+/**
+ * Internal order id (entity_id): the object that has the order number also has it.
+ * plugin.sales.api.order_management.cancel only sends { id }, so that is the fallback.
+ */
+function orderEntityIdOf(payload) {
+  const queue = [payload];
+  while (queue.length) {
+    const node = queue.shift();
+    if (isObject(node)) {
+      if (node.increment_id && node.entity_id) return String(node.entity_id);
+      queue.push(...Object.values(node).filter((x) => x && typeof x === 'object'));
+    } else if (Array.isArray(node)) {
+      queue.push(...node.filter((x) => x && typeof x === 'object'));
+    }
+  }
+  const id = payload?.data?.id ?? payload?.data?.order_id ?? payload?.data?.entity_id;
+  return id !== undefined && id !== null && /^\d+$/.test(String(id)) ? String(id) : null;
+}
+
 module.exports = {
+  orderEntityIdOf,
   WebhookError,
   verify,
   success,

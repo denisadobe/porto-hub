@@ -138,6 +138,24 @@ describe('webhook-order-placed / webhook-order-cancel', () => {
     expect(await agenda.getReservation(r.id)).toBeNull();
   });
 
+  test('SaaS methods: place (after) indexes the order; cancel with only { id } frees the shift', async () => {
+    const r = await hold();
+    const order = orderPayload({ reservationId: r.id, number: '000000124' });
+    order.eventName = 'plugin.sales.api.order_management.place';
+    order.data.order.entity_id = 77;
+    expect((await placed.main(hookParams(order))).body).toEqual({ op: 'success' });
+    expect(await agenda.getReservation(r.id)).toMatchObject({ status: 'confirmed', orderId: '000000124' });
+
+    const cancelPayload = { eventName: 'plugin.sales.api.order_management.cancel', data: { id: 77 } };
+    expect((await cancel.main(hookParams(cancelPayload))).body).toEqual({ op: 'success' });
+    expect(await agenda.getReservation(r.id)).toBeNull();
+    // the shift is bookable again
+    const again = await agenda.reserveSlot({
+      cep: '01310100', sku: 'ADB201', region: SP, date: r.date, shift: r.shift.id, clientId: CLIENT,
+    });
+    expect(again.status).toBe('held');
+  });
+
   test('never block the order when something is wrong', async () => {
     const payload = orderPayload({ reservationId: crypto.randomUUID() });
     expect((await placed.main(hookParams(payload))).body).toEqual({ op: 'success' });

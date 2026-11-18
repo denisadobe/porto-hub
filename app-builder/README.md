@@ -46,8 +46,8 @@ These are raw-http web actions. Every call is checked: the `x-adobe-commerce-web
 | Action | Webhook method (System > Webhooks > Webhooks Subscriptions) | Type | Required | What it does |
 | --- | --- | --- | --- | --- |
 | `webhook-order-validate` | `observer.sales_order_place_before` | before | yes | Blocks the order unless every item has a live `porto_reservation_id` for the same SKU and the shipping CEP matches. It returns `op: exception`, and its message is shown at checkout. A valid hold gets 10 more minutes. |
-| `webhook-order-placed` | `observer.sales_order_place_after` | after | no | Confirms the reservation with the order number. The booking is kept until 30 days after the visit. |
-| `webhook-order-cancel` | `observer.order_cancel_after` | after | no | Releases the booked shift. |
+| `webhook-order-placed` | `plugin.sales.api.order_management.place` | after | no | Confirms the reservation with the order number. The booking is kept until 30 days after the visit. It also indexes the order (`ord.<entity_id>`) for the cancel webhook. |
+| `webhook-order-cancel` | `plugin.sales.api.order_management.cancel` | after | no | Releases the booked shift. This method only sends `{ id }`, so the reservations come from the `ord.<entity_id>` index. |
 
 **Hook fields:** none, so Commerce sends the full payload. The parser finds the order items (objects with a `sku`) and reads the `porto_reservation_id` custom attribute, whatever its shape. Commerce copies the cart item custom attributes set by the storefront to the order items.
 
