@@ -1,0 +1,48 @@
+web: web-src
+
+# The [pre-app-build, pre-app-dev, pre-app-run] hooks are auto-generated. Do not remove or manually edit.
+hooks:
+  pre-app-build: EXTENSION=backend-ui/2 npx aio-commerce-lib-app hooks pre-app-build
+  pre-app-dev: EXTENSION=backend-ui/2 npx aio-commerce-lib-app hooks pre-app-dev
+  pre-app-run: EXTENSION=backend-ui/2 npx aio-commerce-lib-app hooks pre-app-run
+
+operations:
+  # These worker processes definitions are auto-generated. Do not remove or manually edit.
+  workerProcess:
+    - type: action
+      impl: porto-servico-admin/order-grid-booking
+  view:
+    - type: web
+      impl: index.html
+
+# Porto Serviço admin services (called by the admin page with the admin's IMS token, and by
+# Commerce for the orders grid columns). Code lives in ../../actions/admin.
+runtimeManifest:
+  packages:
+    porto-servico-admin:
+      license: Apache-2.0
+      inputs:
+        LOG_LEVEL: info
+        ALLOWED_IMS_ORG: $ALLOWED_IMS_ORG
+      actions:
+        config:
+          function: ../../actions/admin/config/index.js
+          web: 'yes'
+          runtime: nodejs:22
+          annotations:
+            require-adobe-auth: true
+            final: true
+        bookings:
+          function: ../../actions/admin/bookings/index.js
+          web: 'yes'
+          runtime: nodejs:22
+          annotations:
+            require-adobe-auth: true
+            final: true
+        order-grid-booking:
+          function: ../../actions/admin/order-grid-booking/index.js
+          web: 'yes'
+          runtime: nodejs:22
+          annotations:
+            require-adobe-auth: true
+            final: true

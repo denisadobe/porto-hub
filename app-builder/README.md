@@ -35,6 +35,30 @@ Address lookup: [ViaCEP](https://viacep.com.br) (real). Coverage still answers i
 
 `simulatedOccupancy` pre-fills part of each shift (stable per region/day/shift, some shifts full) so the demo agenda looks realistic; turn it off in the agenda configuration.
 
+## Commerce Admin app (App Management + Admin UI SDK v2)
+
+`app.commerce.config.js` declares the app for App Management. The `@adobe/aio-commerce-lib-app` hooks generate the registration actions on every build, under `src/commerce-extensibility-1/.generated`.
+
+What the app adds to the Admin:
+
+- **Sales > Porto Serviço** menu: a React (Spectrum 2) page, `src/commerce-backend-ui-2/web-src`, with three tabs:
+  - **Agendamentos**: held and confirmed bookings, with filters and a **Liberar** button.
+  - **Cobertura**: regions, CEP ranges, services, active switch, and **Testar CEP**.
+  - **Agenda**: booking rules, shifts (time window, slots, weekdays) and blocked dates.
+- **Sales > Orders** grid columns **Agendamento** and **Status do agendamento** (`porto-servico-admin/order-grid-booking`).
+
+Admin services live in package `porto-servico-admin` (`actions/admin/*`), declared in `src/commerce-backend-ui-2/ext.config.yaml`:
+
+- Every action uses `require-adobe-auth: true`.
+- The page calls them with the signed-in admin's IMS token (`useIms`).
+- Only callers from the project's IMS org are accepted (`ALLOWED_IMS_ORG`, set by CI).
+
+To preview the page outside Commerce, open `index.html?mock&api=<base>` with a mock API.
+
+**Setup in the Admin:**
+1. Open **Apps > App Management**, find **Porto Serviço** and choose **Associate**, then **Install**.
+2. Give the admin role the App Management permission, under **System > User Roles > Role Resources > Admin UI SDK**.
+
 ## Tests
 
 `npm test` (Jest, in-memory store and mocked ViaCEP), also run by the workflow before deploying.

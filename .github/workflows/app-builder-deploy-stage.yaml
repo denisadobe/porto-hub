@@ -83,6 +83,8 @@ jobs:
 
       - name: Select Stage workspace
         if: env.HAS_WORKSPACE == 'true'
+        env:
+          IMS_ORG: ${{ steps.ws.outputs.ims_org_id }}
         run: |
           aio telemetry off || true
           aio app use "$RUNNER_TEMP/workspace.json" --no-input
@@ -95,14 +97,18 @@ jobs:
             echo "::warning::No commerce-webhook-public-key.pem: order webhooks will reject every call until it is added."
             echo 'COMMERCE_WEBHOOK_PUBLIC_KEY=""' >> .env
           fi
+          # admin services only accept calls from admins of the project's IMS org
+          echo "ALLOWED_IMS_ORG=${IMS_ORG}" >> .env
+          echo "LOG_LEVEL=info" >> .env
 
       - name: Build
         if: env.HAS_WORKSPACE == 'true'
-        run: aio app build
+        run: aio app build --force-build
 
       - name: Deploy
         if: env.HAS_WORKSPACE == 'true'
-        run: aio app deploy --no-build --no-publish
+        # publishes the Commerce extensions (App Management + Admin UI SDK) for the Stage workspace
+        run: aio app deploy --no-build
 
       - name: Smoke test
         if: env.HAS_WORKSPACE == 'true'

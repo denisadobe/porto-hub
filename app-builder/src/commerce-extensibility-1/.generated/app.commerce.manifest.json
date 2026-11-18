@@ -1,0 +1,39 @@
+{
+  "adminUi": {
+    "menu": {
+      "description": "Gerencie a cobertura por CEP, a agenda de atendimento e os agendamentos.",
+      "id": "porto_servico_agenda",
+      "label": "Porto Serviço",
+      "pageTitle": "Porto Serviço",
+      "parentMenu": "sales"
+    },
+    "order": {
+      "gridColumns": {
+        "columns": [
+          {
+            "align": "left",
+            "id": "porto_booking",
+            "label": "Agendamento",
+            "type": "string"
+          },
+          {
+            "align": "left",
+            "id": "porto_booking_status",
+            "label": "Status do agendamento",
+            "type": "string"
+          }
+        ],
+        "description": "Mostra a data e o turno agendados de cada pedido.",
+        "label": "Agendamento do serviço",
+        "runtimeAction": "porto-servico-admin/order-grid-booking"
+      }
+    }
+  },
+  "metadata": {
+    "description": "Cobertura por CEP, agenda de atendimento e agendamentos dos serviços Porto Serviço.",
+    "displayName": "Porto Serviço",
+    "id": "porto-servico",
+    "upgradeMode": "manual",
+    "version": "1.0.0"
+  }
+}

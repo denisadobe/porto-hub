@@ -7,7 +7,7 @@
 const {
   verify, success, bookingsOf, orderNumberOf, orderEntityIdOf,
 } = require('../lib/webhook');
-const { confirmReservation } = require('../lib/agenda');
+const { confirmReservation, scheduleLabel } = require('../lib/agenda');
 const { putJson } = require('../lib/store');
 const { record, shape } = require('../lib/diagnostics');
 
@@ -26,11 +26,18 @@ exports.main = async (params) => {
   const entityId = orderEntityIdOf(payload);
   const ids = bookingsOf(payload).map((b) => b.reservationId).filter(Boolean);
   const results = await Promise.all(ids.map((id) => confirmReservation(id, { orderId: orderNumber })
-    .then((r) => ({ id, status: r.status }))
+    .then((r) => ({ id, status: r.status, schedule: scheduleLabel(r) }))
     .catch((e) => ({ id, error: e.message }))));
   if (entityId && ids.length) {
     await putJson(`ord.${entityId}`, { orderNumber, reservationIds: ids })
       .catch((e) => console.error('webhook-order-placed: order index', e.message));
+  }
+  const confirmed = results.find((r) => r.status === 'confirmed');
+  if (orderNumber && confirmed) {
+    // orders grid column (Admin UI SDK) looks bookings up by order number
+    await putJson(`ordn.${orderNumber}`, {
+      orderNumber, entityId, reservationIds: ids, schedule: confirmed.schedule, status: 'confirmed',
+    }).catch((e) => console.error('webhook-order-placed: order number index', e.message));
   }
   console.info('webhook-order-placed', JSON.stringify({ orderNumber, entityId, results }));
   await record('webhook-order-placed', {

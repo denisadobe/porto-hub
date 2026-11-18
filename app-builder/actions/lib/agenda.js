@@ -222,6 +222,15 @@ async function reserveSlot({
   throw new HttpError(409, 'slot_full', 'Esse horário acabou de ser preenchido. Escolha outro turno ou data.');
 }
 
+/** "qui., 19/11 · Manhã (08:00–12:00)" for admin lists and the orders grid. */
+function scheduleLabel(r) {
+  if (!r?.date) return '';
+  const day = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: 'UTC', weekday: 'short', day: '2-digit', month: '2-digit',
+  }).format(new Date(`${r.date}T12:00:00Z`));
+  return `${day} · ${r.shift?.label || ''} (${r.shift?.window || ''})`;
+}
+
 /** Gives a held reservation more time (checkout in progress), never less than it already has. */
 async function extendHold(id, { seconds = 600, now = new Date() } = {}) {
   const r = await getReservation(id);
@@ -265,6 +274,7 @@ module.exports = {
   getReservation,
   confirmReservation,
   extendHold,
+  scheduleLabel,
   publicReservation,
   validateReservationId,
 };

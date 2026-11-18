@@ -8,7 +8,7 @@ const {
   verify, success, bookingsOf, orderEntityIdOf,
 } = require('../lib/webhook');
 const { releaseReservation } = require('../lib/agenda');
-const { getJson, remove } = require('../lib/store');
+const { getJson, putJson, remove } = require('../lib/store');
 const { record, shape } = require('../lib/diagnostics');
 
 exports.main = async (params) => {
@@ -30,6 +30,10 @@ exports.main = async (params) => {
     .then((r) => ({ id, ...r }))
     .catch((e) => ({ id, error: e.message }))));
   if (index) await remove(`ord.${entityId}`).catch(() => {});
+  if (index?.orderNumber) {
+    const byNumber = await getJson(`ordn.${index.orderNumber}`).catch(() => null);
+    if (byNumber) await putJson(`ordn.${index.orderNumber}`, { ...byNumber, status: 'released' }).catch(() => {});
+  }
   console.info('webhook-order-cancel', JSON.stringify({ entityId, orderNumber: index?.orderNumber, results }));
   await record('webhook-order-cancel', {
     signature: 'ok', eventName: payload.eventName, shape: shape(payload), entityId, indexFound: !!index, results,
