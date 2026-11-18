@@ -1,0 +1,110 @@
+# Deploys the Porto Serviço App Builder app (app-builder/) to the Stage workspace.
+# Needs one repository secret: AIO_STAGE_WORKSPACE_JSON = Developer Console > project > Stage > "Download all" file contents.
+name: App Builder - deploy Stage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app-builder/**'
+      - '.github/workflows/app-builder-deploy-stage.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: app-builder-stage
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: app-builder
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      HAS_WORKSPACE: ${{ secrets.AIO_STAGE_WORKSPACE_JSON != '' }}
+    steps:
+      - name: Secret not configured yet
+        if: env.HAS_WORKSPACE != 'true'
+        run: |
+          echo "::notice::Skipping deploy: add the AIO_STAGE_WORKSPACE_JSON repository secret to deploy App Builder to Stage."
+          echo "Deploy skipped: secret AIO_STAGE_WORKSPACE_JSON not configured." >> "$GITHUB_STEP_SUMMARY"
+        working-directory: .
+
+      - uses: actions/checkout@v4
+        if: env.HAS_WORKSPACE == 'true'
+      - uses: actions/setup-node@v4
+        if: env.HAS_WORKSPACE == 'true'
+        with:
+          node-version: 22
+      - run: npm ci
+        if: env.HAS_WORKSPACE == 'true'
+
+      - name: Read workspace configuration
+        if: env.HAS_WORKSPACE == 'true'
+        id: ws
+        env:
+          AIO_WORKSPACE_JSON: ${{ secrets.AIO_STAGE_WORKSPACE_JSON }}
+        run: node scripts/ci-workspace.js "$RUNNER_TEMP/workspace.json"
+
+      - name: Install Adobe I/O CLI
+        if: env.HAS_WORKSPACE == 'true'
+        uses: adobe/aio-cli-setup-action@1.3.0
+        with:
+          os: ubuntu-latest
+          version: 11.x.x
+
+      - name: Sign in (OAuth Server-to-Server)
+        if: env.HAS_WORKSPACE == 'true'
+        uses: adobe/aio-apps-action@4.1.0
+        with:
+          os: ubuntu-latest
+          command: oauth_sts
+          CLIENTID: ${{ steps.ws.outputs.client_id }}
+          CLIENTSECRET: ${{ steps.ws.outputs.client_secret }}
+          TECHNICALACCOUNTID: ${{ steps.ws.outputs.technical_account_id }}
+          TECHNICALACCOUNTEMAIL: ${{ steps.ws.outputs.technical_account_email }}
+          IMSORGID: ${{ steps.ws.outputs.ims_org_id }}
+          SCOPES: ${{ steps.ws.outputs.scopes }}
+
+      - name: Select Stage workspace
+        if: env.HAS_WORKSPACE == 'true'
+        run: |
+          aio telemetry off || true
+          aio app use "$RUNNER_TEMP/workspace.json" --no-input
+          rm -f "$RUNNER_TEMP/workspace.json"
+
+      - name: Build
+        if: env.HAS_WORKSPACE == 'true'
+        run: aio app build
+
+      - name: Deploy
+        if: env.HAS_WORKSPACE == 'true'
+        run: aio app deploy --no-build --no-publish
+
+      - name: Smoke test
+        if: env.HAS_WORKSPACE == 'true'
+        env:
+          NAMESPACE: ${{ steps.ws.outputs.namespace }}
+        run: |
+          base="https://${NAMESPACE}.adobeioruntime.net/api/v1/web/porto-servico"
+          echo "Actions base URL: $base"
+          echo "### App Builder Stage" >> "$GITHUB_STEP_SUMMARY"
+          echo "Base URL: \`$base\`" >> "$GITHUB_STEP_SUMMARY"
+          curl -fsS "$base/coverage?cep=01310100&sku=ADB201" | tee /dev/stderr | grep -Eq '"served": ?true'
+          curl -fsS "$base/slots?cep=01310100&sku=ADB201&days=3" | grep -q '"days"'
+          echo "Smoke test OK" >> "$GITHUB_STEP_SUMMARY"

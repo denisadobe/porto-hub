@@ -1,0 +1,58 @@
+# Porto Serviço demo app (Adobe App Builder).
+# Public web actions used by the storefront (Edge Delivery Services) in the service purchase journey:
+#   coverage    GET  ?cep=&sku=                  is the CEP served? + address from ViaCEP
+#   slots       GET  ?cep=&sku=&days=            available days/shifts for the region
+#   reserve     POST {cep, sku, date, shift}     holds a slot for a few minutes
+#   release     POST {reservationId}             frees a held slot
+#   reservation GET  ?id=                        reservation status
+application:
+  runtimeManifest:
+    packages:
+      porto-servico:
+        license: Apache-2.0
+        actions:
+          coverage:
+            function: actions/coverage/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+          slots:
+            function: actions/slots/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+          reserve:
+            function: actions/reserve/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+          release:
+            function: actions/release/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+          reservation:
+            function: actions/reservation/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
