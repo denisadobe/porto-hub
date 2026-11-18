@@ -1,0 +1,430 @@
+/* Porto Serviço booking flow (product page). Mobile first; 1rem = 10px on this site. */
+/* stylelint-disable no-descending-specificity */
+.service-booking {
+  /* the scrolling day strip must not widen the product grid: size from the container only */
+  contain: inline-size;
+  min-width: 0;
+  margin: 8px 0 24px;
+  padding: 20px 16px;
+  border: 1px solid var(--porto-neutral-200);
+  border-radius: 12px;
+  background: var(--porto-neutral-0);
+  color: var(--porto-neutral-text);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.service-booking h2 {
+  margin: 0 0 4px;
+  color: var(--porto-neutral-heading);
+  font-family: var(--heading-font-family);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.service-booking .service-booking__intro {
+  margin: 0 0 16px;
+  color: var(--porto-neutral-600);
+}
+
+.service-booking .service-booking__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-booking .service-booking__step {
+  border-top: 1px solid var(--porto-neutral-200);
+  padding: 14px 0;
+}
+
+.service-booking .service-booking__step:first-child {
+  border-top: 0;
+}
+
+.service-booking .service-booking__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.service-booking .service-booking__number {
+  flex: 0 0 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--porto-neutral-100);
+  color: var(--porto-neutral-600);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.service-booking .service-booking__step[data-state="active"] .service-booking__number {
+  background: var(--porto-blue-900);
+  color: var(--porto-neutral-0);
+}
+
+.service-booking .service-booking__step[data-state="done"] .service-booking__number {
+  background: var(--porto-blue-100);
+  color: var(--porto-blue-900);
+  font-size: 0;
+}
+
+.service-booking .service-booking__step[data-state="done"] .service-booking__number::before {
+  content: "✓";
+  font-size: 14px;
+}
+
+.service-booking .service-booking__heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.service-booking .service-booking__heading h3 {
+  margin: 3px 0 0;
+  color: var(--porto-neutral-heading);
+  font-family: var(--heading-font-family);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.service-booking .service-booking__step[data-state="locked"] h3 {
+  color: var(--porto-neutral-500);
+}
+
+.service-booking .service-booking__summary {
+  margin: 2px 0 0;
+  color: var(--porto-neutral-600);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.service-booking .service-booking__step:not([data-state="done"]) .service-booking__summary {
+  display: none;
+}
+
+.service-booking .service-booking__change {
+  margin: 2px 0 0;
+  padding: 4px 8px;
+  border: 0;
+  background: none;
+  color: var(--porto-blue-900);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.service-booking .service-booking__change:hover {
+  text-decoration: underline;
+}
+
+.service-booking .service-booking__body {
+  padding: 12px 0 4px 40px;
+}
+
+.service-booking label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--porto-neutral-heading);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.service-booking input:not([type="radio"]) {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: 8px;
+  background: var(--porto-neutral-0);
+  color: var(--porto-neutral-text);
+  font: inherit;
+  font-size: 16px;
+}
+
+.service-booking input:not([type="radio"]):focus-visible {
+  outline: 2px solid var(--porto-blue-900);
+  outline-offset: 1px;
+  border-color: var(--porto-blue-900);
+}
+
+.service-booking input[readonly] {
+  background: var(--porto-neutral-100);
+  color: var(--porto-neutral-600);
+}
+
+.service-booking .button {
+  min-height: 44px;
+  margin: 0;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--porto-blue-900);
+  color: var(--porto-neutral-0);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.service-booking .button:hover:not(:disabled) {
+  background: var(--porto-blue-800);
+}
+
+.service-booking .button:disabled {
+  background: var(--porto-neutral-300);
+  color: var(--porto-neutral-600);
+  cursor: not-allowed;
+}
+
+.service-booking .service-booking__row {
+  display: flex;
+  gap: 8px;
+}
+
+.service-booking .service-booking__row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.service-booking .service-booking__help {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--porto-blue-900);
+  font-size: 13px;
+}
+
+.service-booking .service-booking__message {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.service-booking .service-booking__message:empty {
+  display: none;
+}
+
+.service-booking .service-booking__message[data-kind="success"] {
+  color: #0b7a3b;
+}
+
+.service-booking .service-booking__message[data-kind="warning"] {
+  color: #8a5300;
+}
+
+.service-booking .service-booking__message[data-kind="error"] {
+  color: #b3261e;
+}
+
+/* step 2 */
+.service-booking .service-booking__hint {
+  margin: 0 0 10px;
+  color: var(--porto-neutral-600);
+  font-size: 13px;
+}
+
+.service-booking .service-booking__days {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scroll-snap-type: x proximity;
+}
+
+.service-booking .service-booking__day {
+  position: relative;
+  flex: 0 0 64px;
+  margin: 0;
+  padding: 8px 4px;
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: 10px;
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  font-weight: 400;
+  cursor: pointer;
+  scroll-snap-align: start;
+}
+
+.service-booking .service-booking__day input,
+.service-booking .service-booking__shift input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  margin: 0;
+  cursor: inherit;
+}
+
+.service-booking .service-booking__day-weekday,
+.service-booking .service-booking__day-month {
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.service-booking .service-booking__day-date {
+  color: var(--porto-neutral-heading);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.service-booking .service-booking__day:has(input:checked),
+.service-booking .service-booking__shift:has(input:checked) {
+  border-color: var(--porto-blue-900);
+  background: var(--porto-blue-100);
+  box-shadow: inset 0 0 0 1px var(--porto-blue-900);
+}
+
+.service-booking .service-booking__day:has(input:focus-visible),
+.service-booking .service-booking__shift:has(input:focus-visible) {
+  outline: 2px solid var(--porto-blue-900);
+  outline-offset: 2px;
+}
+
+.service-booking .service-booking__day.is-soldout,
+.service-booking .service-booking__shift.is-soldout {
+  border-style: dashed;
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.service-booking .service-booking__shifts {
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.service-booking .service-booking__shifts legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--porto-neutral-heading);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.service-booking .service-booking__shifts legend::first-letter {
+  text-transform: uppercase;
+}
+
+.service-booking .service-booking__shift {
+  position: relative;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.service-booking .service-booking__shift-label {
+  color: var(--porto-neutral-heading);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.service-booking .service-booking__shift-window {
+  color: var(--porto-neutral-600);
+}
+
+.service-booking .service-booking__shift-spots {
+  margin-left: auto;
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+}
+
+.service-booking .service-booking__shifts + .service-booking__message + .button {
+  margin-top: 14px;
+}
+
+/* step 3 */
+.service-booking .service-booking__address {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.service-booking .service-booking__address .button {
+  justify-self: start;
+}
+
+/* step 4 */
+.service-booking .service-booking__review {
+  margin: 0 0 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px 16px;
+}
+
+.service-booking .service-booking__review dt {
+  margin-top: 8px;
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.service-booking .service-booking__review dd {
+  margin: 0;
+  color: var(--porto-neutral-heading);
+  overflow-wrap: anywhere;
+}
+
+.service-booking .service-booking__review dd::first-letter {
+  text-transform: uppercase;
+}
+
+.service-booking .service-booking__note {
+  margin: 0 0 12px;
+  color: var(--porto-neutral-600);
+  font-size: 13px;
+}
+
+.service-booking .service-booking__checkout {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .service-booking {
+    padding: 24px;
+  }
+
+  .service-booking .service-booking__address {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .service-booking .service-booking__field--street { grid-column: span 4; }
+  .service-booking .service-booking__field--number { grid-column: span 2; }
+  .service-booking .service-booking__field--complement { grid-column: span 3; }
+  .service-booking .service-booking__field--neighborhood { grid-column: span 3; }
+  .service-booking .service-booking__field--city { grid-column: span 6; }
+  .service-booking .service-booking__field--firstname { grid-column: span 3; }
+  .service-booking .service-booking__field--lastname { grid-column: span 3; }
+  .service-booking .service-booking__field--telephone { grid-column: span 3; }
+  .service-booking .service-booking__field--email { grid-column: span 3; }
+
+  .service-booking .service-booking__address .button {
+    grid-column: 1 / -1;
+  }
+
+  .service-booking .service-booking__review {
+    grid-template-columns: max-content 1fr;
+  }
+
+  .service-booking .service-booking__review dt {
+    margin-top: 0;
+  }
+
+  .service-booking .service-booking__checkout {
+    width: auto;
+  }
+}

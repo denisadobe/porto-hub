@@ -39,8 +39,10 @@ import {
   getProductLink,
   renderCartItemPromotions,
 } from '../../scripts/commerce.js';
+import renderBookingSummary from '../../scripts/porto-booking-summary.js';
 
 export default async function decorate(block) {
+  renderBookingSummary(block);
   // Configuration
   const {
     'hide-heading': hideHeading = 'false',

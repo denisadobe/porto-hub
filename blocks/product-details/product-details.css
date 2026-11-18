@@ -127,3 +127,14 @@
   overflow: hidden;
   white-space: nowrap;
 }
+
+/* Porto Serviço booking flow replaces quantity + Add to Cart (see service-booking.js) */
+.product-details.product-details--booking .product-details__quantity,
+.product-details.product-details--booking .product-details__buttons__add-to-cart {
+  display: none;
+}
+
+.product-details.product-details--booking .product-details__booking {
+  grid-column: 1 / -1;
+  min-width: 0;
+}

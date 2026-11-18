@@ -26,8 +26,11 @@ import ProductGallery from '@dropins/storefront-pdp/containers/ProductGallery.js
 import ProductGiftCardOptions from '@dropins/storefront-pdp/containers/ProductGiftCardOptions.js';
 import ProductCustomizableOptions from '@dropins/storefront-pdp/containers/ProductCustomizableOptions.js';
 
+import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
+
 // Libs
 import { rootLink, fetchPlaceholders } from '../../scripts/commerce.js';
+import renderServiceBooking from './service-booking.js';
 
 // Initializers
 import { IMAGES_SIZES } from '../../scripts/initializers/pdp.js';
@@ -91,6 +94,7 @@ export default async function decorate(block) {
         <div class="product-details__customizable-options"></div>
         <div class="product-details__configuration">
           <div class="product-details__options"></div>
+          <div class="product-details__booking"></div>
           <div class="product-details__quantity"></div>
           <div class="product-details__buttons">
             <div class="product-details__buttons__add-to-cart"></div>
@@ -326,6 +330,16 @@ export default async function decorate(block) {
       }
     },
   })($addToCart);
+
+  // Porto Serviço: services are bought through the booking flow (CEP -> agenda -> address),
+  // which replaces quantity + "Add to Cart". Without the App Builder config the page keeps the
+  // standard behaviour.
+  if (getConfigValue('porto-booking')?.api) {
+    block.classList.add('product-details--booking');
+    $quantity.hidden = true;
+    $addToCart.hidden = true;
+    renderServiceBooking(block.querySelector('.product-details__booking'), { getProduct: () => product });
+  }
 
   // Lifecycle Events
   events.on('pdp/data', (data) => {

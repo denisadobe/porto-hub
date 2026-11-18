@@ -75,6 +75,7 @@ import '../../scripts/initializers/payment-services.js';
 
 // Checkout success block import and CSS preload
 import { renderCheckoutSuccess, preloadCheckoutSuccess } from '../commerce-checkout-success/commerce-checkout-success.js';
+import renderBookingSummary from '../../scripts/porto-booking-summary.js';
 
 preloadCheckoutSuccess();
 
@@ -92,6 +93,7 @@ export default async function decorate(block) {
 
   const cartData = events.lastPayload('cart/initialized');
   redirectToCartIfEmpty(cartData);
+  renderBookingSummary(block);
 
   // Container and component references
   let shippingForm;

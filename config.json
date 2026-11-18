@@ -2,6 +2,10 @@
   "public": {
     "default": {
       "commerce-endpoint": "https://na1-sandbox.api.commerce.adobe.com/TcvPqpzQp1aRq3ohMQt2ct/graphql",
+      "porto-booking": {
+        "api": "https://285361-portoservicoapp-stage.adobeioruntime.net/api/v1/web/porto-servico",
+        "country-code": "BR"
+      },
       "headers": {
         "all": {
           "Store": "default"

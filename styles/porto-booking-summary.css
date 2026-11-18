@@ -1,0 +1,57 @@
+/* "Agendamento" box on cart and checkout (scripts/porto-booking-summary.js) */
+.porto-booking-summary {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border: 1px solid var(--porto-blue-200);
+  border-left: 4px solid var(--porto-blue-900);
+  border-radius: 8px;
+  background: var(--porto-blue-100);
+  color: var(--porto-neutral-text);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.porto-booking-summary[hidden] {
+  display: none;
+}
+
+.porto-booking-summary p {
+  margin: 0;
+}
+
+.porto-booking-summary .porto-booking-summary__title {
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.porto-booking-summary .porto-booking-summary__when {
+  margin-top: 2px;
+  color: var(--porto-neutral-heading);
+  font-family: var(--heading-font-family);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.porto-booking-summary .porto-booking-summary__hold {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.porto-booking-summary .porto-booking-summary__hold:empty {
+  display: none;
+}
+
+.porto-booking-summary .porto-booking-summary__hold[data-kind="warning"] {
+  color: #8a5300;
+  font-weight: 600;
+}
+
+.porto-booking-summary .porto-booking-summary__change {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--porto-blue-900);
+  font-weight: 700;
+}

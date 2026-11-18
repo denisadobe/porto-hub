@@ -11,6 +11,8 @@ const reservation = require('../actions/reservation/index');
 const ORIGIN = 'https://main--porto-hub--denisadobe.aem.live';
 const get = (params) => ({ __ow_method: 'get', __ow_headers: { origin: ORIGIN }, ...params });
 const post = (params) => ({ __ow_method: 'post', __ow_headers: { origin: ORIGIN }, ...params });
+const CLIENT = '11111111-2222-4333-8444-555555555555';
+const newClient = () => require('crypto').randomUUID();
 
 const VIACEP = {
   '01310100': {
@@ -119,7 +121,7 @@ describe('reservations', () => {
   test('reserve holds a unit, lowers availability, and can be read and released', async () => {
     const { date, shift } = await firstFreeSlot();
     const res = await reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: CLIENT,
     }));
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject({ status: 'held', date, shift: { id: shift.id } });
@@ -139,7 +141,7 @@ describe('reservations', () => {
   test('never overbooks: parallel requests beyond capacity fail with slot_full', async () => {
     const { date, shift } = await firstFreeSlot();
     const attempts = await Promise.all(Array.from({ length: shift.remaining + 3 }, () => reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: newClient(),
     }))));
     const okCount = attempts.filter((r) => r.statusCode === 200).length;
     expect(okCount).toBe(shift.remaining);
@@ -151,17 +153,19 @@ describe('reservations', () => {
   test('replaces releases the previous hold', async () => {
     const { date, shift } = await firstFreeSlot();
     const first = await reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: CLIENT,
     }));
     const second = await reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id, replaces: first.body.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, replaces: first.body.id, clientId: CLIENT,
     }));
     expect(second.statusCode).toBe(200);
     expect((await reservation.main(get({ id: first.body.id }))).statusCode).toBe(404);
   });
 
   test('rejects past, unknown or out-of-window dates and unknown shifts', async () => {
-    const base = { cep: '01310100', sku: 'ADB201', shift: 'manha' };
+    const base = {
+      cep: '01310100', sku: 'ADB201', shift: 'manha', clientId: CLIENT,
+    };
     expect((await reserve.main(post({ ...base, date: '2020-01-01' }))).body.error.code).toBe('invalid_date');
     expect((await reserve.main(post({ ...base, date: 'amanha' }))).body.error.code).toBe('invalid_date');
     const { date } = await firstFreeSlot();
@@ -175,7 +179,7 @@ describe('reservations', () => {
     setStore(store);
     const { date, shift } = await firstFreeSlot();
     const res = await reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: CLIENT,
     }));
     now += 16 * 60 * 1000;
     expect((await reservation.main(get({ id: res.body.id }))).statusCode).toBe(404);
@@ -184,12 +188,37 @@ describe('reservations', () => {
   test('confirmed reservations survive the hold and cannot be released by the storefront', async () => {
     const { date, shift } = await firstFreeSlot();
     const res = await reserve.main(post({
-      cep: '01310100', sku: 'ADB201', date, shift: shift.id,
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: CLIENT,
     }));
     const confirmed = await agenda.confirmReservation(res.body.id, { orderId: '000000123' });
     expect(confirmed).toMatchObject({ status: 'confirmed', orderId: '000000123' });
     expect((await release.main(post({ reservationId: res.body.id }))).statusCode).toBe(409);
     expect((await agenda.releaseReservation(res.body.id, { allowConfirmed: true })).released).toBe(true);
+  });
+
+  test('a customer can hold at most 2 slots at a time (replacing does not count)', async () => {
+    const { date, shift } = await firstFreeSlot();
+    const body = {
+      cep: '01310100', sku: 'ADB201', date, shift: shift.id, clientId: CLIENT,
+    };
+    const capacity = (await slots.main(get({ cep: '01310100', sku: 'ADB201' }))).body.days
+      .flatMap((d) => d.shifts.map((s) => ({ date: d.date, shift: s.id, remaining: s.remaining })))
+      .filter((s) => s.remaining > 0);
+    const a = await reserve.main(post({ ...body, date: capacity[0].date, shift: capacity[0].shift }));
+    const b = await reserve.main(post({ ...body, date: capacity[1].date, shift: capacity[1].shift }));
+    expect([a.statusCode, b.statusCode]).toEqual([200, 200]);
+    const c = await reserve.main(post({ ...body, date: capacity[2].date, shift: capacity[2].shift }));
+    expect(c.statusCode).toBe(429);
+    expect(c.body.error.code).toBe('too_many_holds');
+    const swap = await reserve.main(post({
+      ...body, date: capacity[2].date, shift: capacity[2].shift, replaces: b.body.id,
+    }));
+    expect(swap.statusCode).toBe(200);
+    await release.main(post({ reservationId: a.body.id }));
+    expect((await reserve.main(post({ ...body, date: capacity[3].date, shift: capacity[3].shift }))).statusCode).toBe(200);
+    expect((await reserve.main(post({ ...body, clientId: 'not-a-uuid' }))).body.error.code).toBe('invalid_client');
+    expect(date).toBeTruthy();
+    expect(shift).toBeTruthy();
   });
 
   test('invalid reservation ids are rejected', async () => {

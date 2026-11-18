@@ -57,3 +57,14 @@ No events are emitted by this block. -->
 - **API Errors**: If cart operations fail, shows error alerts with dismiss functionality
 - **Image Rendering Errors**: If product images fail to load, the image slots handle fallback behavior
 - **Fallback Behavior**: Always falls back to appropriate mode based on URL parameters and cart state
+
+## Porto Serviço booking flow
+
+When `config.json` has `public.default["porto-booking"].api` (the App Builder Stage base URL), the quantity selector and **Add to Cart** are replaced by the booking flow in `service-booking.js` / `service-booking.css`:
+
+1. **CEP**: coverage check (App Builder `coverage`, address from ViaCEP). Not-served CEPs get a message; the last CEP is remembered.
+2. **Dia e turno**: next 14 days with shifts (`slots`). Choosing a shift holds it for 15 minutes (`reserve`, max 2 holds per browser); changing it releases the previous hold.
+3. **Endereço e contato**: street and neighborhood come from the CEP; number, name, phone (and e-mail for guests) are required.
+4. **Revisão**: empties the cart (one service per purchase), adds the service with cart item custom attributes `porto_reservation_id`, `porto_schedule`, `porto_cep`, `porto_region`, sets the shipping/billing address, guest e-mail and the first shipping method, then opens `/checkout` already filled in.
+
+The cart and checkout pages show the booking (`scripts/porto-booking-summary.js`). Reservation and address are kept in `sessionStorage` (`porto-booking-session`); the customer id and last CEP in `localStorage` (`porto-booking`). Without the config, the block keeps the standard Add to Cart behaviour.

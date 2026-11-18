@@ -19,6 +19,7 @@ const {
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const MAX_ACTIVE_HOLDS = 2; // per customer (browser session), so a script can't fill the agenda
 
 function todayIn(timeZone, now = new Date()) {
   return new Intl.DateTimeFormat('en-CA', {
@@ -130,7 +131,7 @@ async function availableSlots(region, { days, now } = {}) {
 }
 
 function publicReservation(r) {
-  const { slotKey, ...rest } = r;
+  const { slotKey, clientId, ...rest } = r;
   return rest;
 }
 
@@ -153,12 +154,31 @@ async function releaseReservation(id, { allowConfirmed = false } = {}) {
   }
   await remove(r.slotKey);
   await remove(`rsv.${r.id}`);
+  if (r.clientId) await remove(`hold.${r.clientId}.${r.id}`);
   return { released: true };
 }
 
+function validateClientId(id) {
+  if (!UUID_RE.test(String(id || ''))) {
+    throw new HttpError(400, 'invalid_client', 'Não foi possível identificar sua sessão. Recarregue a página e tente de novo.');
+  }
+  return String(id);
+}
+
+/** Active (still held) reservations of a customer, excluding the one being replaced. */
+async function activeHolds(clientId, exclude) {
+  const ids = (await listKeys(`hold.${clientId}.*`)).map((k) => k.split('.')[2]).filter((id) => id !== exclude);
+  const reservations = await Promise.all(ids.map((id) => getJson(`rsv.${id}`)));
+  return reservations.filter((r) => r && r.status === 'held');
+}
+
 async function reserveSlot({
-  cep, sku, region, date, shift: shiftId, replaces, now = new Date(),
+  cep, sku, region, date, shift: shiftId, replaces, clientId: rawClientId, now = new Date(),
 }) {
+  const clientId = validateClientId(rawClientId);
+  if ((await activeHolds(clientId, replaces)).length >= MAX_ACTIVE_HOLDS) {
+    throw new HttpError(429, 'too_many_holds', `Você já tem ${MAX_ACTIVE_HOLDS} horários reservados. Conclua a compra ou aguarde alguns minutos para reservar outro.`);
+  }
   const agenda = await loadAgenda();
   if (!DATE_RE.test(String(date || '')) || !bookableDates(agenda, now).includes(date)) {
     throw new HttpError(422, 'invalid_date', 'Essa data não está disponível para agendamento.');
@@ -192,7 +212,9 @@ async function reserveSlot({
     // eslint-disable-next-line no-await-in-loop
     if (await putJson(slotKey, reservation, { ttl: holdSeconds, ifNotExists: true })) {
       // eslint-disable-next-line no-await-in-loop
-      await putJson(`rsv.${id}`, { ...reservation, slotKey }, { ttl: holdSeconds });
+      await putJson(`rsv.${id}`, { ...reservation, slotKey, clientId }, { ttl: holdSeconds });
+      // eslint-disable-next-line no-await-in-loop
+      await putJson(`hold.${clientId}.${id}`, { id }, { ttl: holdSeconds });
       return reservation;
     }
   }
@@ -211,6 +233,7 @@ async function confirmReservation(id, { orderId, now = new Date() } = {}) {
   const ttl = Math.max(60, (Date.parse(`${r.date}T23:59:59Z`) + 30 * DAY_MS - now.getTime()) / 1000);
   await putJson(r.slotKey, publicReservation(confirmed), { ttl });
   await putJson(`rsv.${id}`, confirmed, { ttl });
+  if (r.clientId) await remove(`hold.${r.clientId}.${id}`);
   return publicReservation(confirmed);
 }
 
