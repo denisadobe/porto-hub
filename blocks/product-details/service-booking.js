@@ -394,7 +394,8 @@ export default function renderServiceBooking(container, { getProduct }) {
         message(output, result.message, 'warning');
         return false;
       }
-      if (state.coverage?.cep !== result.cep && state.reservation) {
+      // a hold belongs to a CEP: drop it only when the customer switches to another CEP
+      if (state.reservation && digits(state.reservation.cep) !== digits(result.cep)) {
         api('release', { reservationId: state.reservation.id }).catch(() => {});
         state.reservation = null;
       }
