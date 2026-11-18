@@ -102,7 +102,7 @@ jobs:
           NAMESPACE: ${{ steps.ws.outputs.namespace }}
         run: |
           base="https://${NAMESPACE}.adobeioruntime.net/api/v1/web/porto-servico"
-          echo "Actions base URL: $base"
+          echo "::notice title=App Builder Stage base URL::$base"
           echo "### App Builder Stage" >> "$GITHUB_STEP_SUMMARY"
           echo "Base URL: \`$base\`" >> "$GITHUB_STEP_SUMMARY"
           curl -fsS "$base/coverage?cep=01310100&sku=ADB201" | tee /dev/stderr | grep -Eq '"served": ?true'
