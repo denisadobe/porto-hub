@@ -93,3 +93,12 @@ application:
               require-adobe-auth: false
               raw-http: true
               final: true
+          webhook-log:
+            function: actions/webhook-log/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true

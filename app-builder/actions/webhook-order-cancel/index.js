@@ -9,6 +9,7 @@ const {
 } = require('../lib/webhook');
 const { releaseReservation } = require('../lib/agenda');
 const { getJson, remove } = require('../lib/store');
+const { record, shape } = require('../lib/diagnostics');
 
 exports.main = async (params) => {
   let payload;
@@ -16,6 +17,9 @@ exports.main = async (params) => {
     payload = verify(params);
   } catch (e) {
     console.error('webhook-order-cancel:', e.message);
+    await record('webhook-order-cancel', {
+      signature: 'failed', reason: e.message, headers: Object.keys(params.__ow_headers || {}), bodyLength: (params.__ow_body || '').length,
+    });
     return success();
   }
   const entityId = orderEntityIdOf(payload);
@@ -27,5 +31,8 @@ exports.main = async (params) => {
     .catch((e) => ({ id, error: e.message }))));
   if (index) await remove(`ord.${entityId}`).catch(() => {});
   console.info('webhook-order-cancel', JSON.stringify({ entityId, orderNumber: index?.orderNumber, results }));
+  await record('webhook-order-cancel', {
+    signature: 'ok', eventName: payload.eventName, shape: shape(payload), entityId, indexFound: !!index, results,
+  });
   return success();
 };

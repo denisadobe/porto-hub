@@ -8,6 +8,7 @@ const {
   verify, success, exception, bookingsOf, shippingPostcodeOf, orderNumberOf,
 } = require('../lib/webhook');
 const { getReservation, extendHold } = require('../lib/agenda');
+const { record, shape } = require('../lib/diagnostics');
 
 const digits = (v) => String(v || '').replace(/\D/g, '');
 
@@ -26,6 +27,9 @@ exports.main = async (params) => {
     payload = verify(params);
   } catch (e) {
     console.error('webhook-order-validate:', e.message);
+    await record('webhook-order-validate', {
+      signature: 'failed', reason: e.message, headers: Object.keys(params.__ow_headers || {}), bodyLength: (params.__ow_body || '').length,
+    });
     // unsigned or forged requests never pass (secure default)
     return exception(MSG.unavailable);
   }
@@ -34,6 +38,9 @@ exports.main = async (params) => {
     const postcode = digits(shippingPostcodeOf(payload));
     const orderNumber = orderNumberOf(payload);
     console.info('webhook-order-validate', JSON.stringify({ orderNumber, postcode, bookings }));
+    await record('webhook-order-validate', {
+      signature: 'ok', eventName: payload.eventName, shape: shape(payload), bookings: bookings.length, withReservation: bookings.filter((b) => b.reservationId).length,
+    });
     if (!bookings.length) return success();
     const requireBooking = String(params.REQUIRE_BOOKING ?? 'true') !== 'false';
 

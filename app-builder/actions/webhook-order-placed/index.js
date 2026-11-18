@@ -9,6 +9,7 @@ const {
 } = require('../lib/webhook');
 const { confirmReservation } = require('../lib/agenda');
 const { putJson } = require('../lib/store');
+const { record, shape } = require('../lib/diagnostics');
 
 exports.main = async (params) => {
   let payload;
@@ -16,6 +17,9 @@ exports.main = async (params) => {
     payload = verify(params);
   } catch (e) {
     console.error('webhook-order-placed:', e.message);
+    await record('webhook-order-placed', {
+      signature: 'failed', reason: e.message, headers: Object.keys(params.__ow_headers || {}), bodyLength: (params.__ow_body || '').length,
+    });
     return success();
   }
   const orderNumber = orderNumberOf(payload);
@@ -29,5 +33,8 @@ exports.main = async (params) => {
       .catch((e) => console.error('webhook-order-placed: order index', e.message));
   }
   console.info('webhook-order-placed', JSON.stringify({ orderNumber, entityId, results }));
+  await record('webhook-order-placed', {
+    signature: 'ok', eventName: payload.eventName, shape: shape(payload), entityId, hasOrderNumber: !!orderNumber, results,
+  });
   return success();
 };
