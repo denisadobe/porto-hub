@@ -1,0 +1,77 @@
+/* cards-contact: values from .s-customer-service-cards on portoseguro.com.br/servicos */
+.cards-contact .cards-contact-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cards-contact .cards-contact-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid #dadbdd;
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  color: var(--porto-neutral-text);
+  overflow: hidden;
+}
+
+.cards-contact .cards-contact-card-image {
+  margin: -20px -16px 24px;
+}
+
+.cards-contact .cards-contact-card-image img {
+  display: block;
+  width: 100%;
+}
+
+.cards-contact .cards-contact-card-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cards-contact .cards-contact-card-body > * {
+  margin: 0;
+}
+
+.cards-contact .cards-contact-card-body h3,
+.cards-contact .cards-contact-title {
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: 600;
+  line-height: var(--heading-line-height-l);
+  letter-spacing: 0.2px;
+  color: var(--porto-neutral-text);
+}
+
+.cards-contact .cards-contact-card-body p {
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-s);
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: var(--porto-neutral-text);
+  overflow-wrap: break-word;
+}
+
+/* source: 24px card gap above the button, button pinned to the card bottom */
+.cards-contact .cards-contact-card-body .cards-contact-cta {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+main .cards-contact .cards-contact-cta a.button:any-link {
+  display: flex;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .cards-contact .cards-contact-list {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+}

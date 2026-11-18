@@ -1,0 +1,107 @@
+/*
+ * Porto Serviço brand tokens, extracted from https://www.portoseguro.com.br/servicos
+ * Note: html font-size is 62.5% (1rem = 10px) in this Commerce boilerplate.
+ */
+:root {
+  /* Porto palette */
+  --porto-blue-900: #0046c0; /* primary action / links */
+  --porto-blue-800: #2662c9;
+  --porto-blue-700: #1381e2;
+  --porto-blue-650: #00a1fc; /* Porto Seguros brand blue */
+  --porto-blue-400: #8cd7fd;
+  --porto-blue-200: #d1effe;
+  --porto-blue-100: #eef9ff;
+  --porto-banking-650: #2c3da8;
+  --porto-neutral-900: #000;
+  --porto-neutral-800: #1f1f1f;
+  --porto-neutral-text: oklch(30.12% 0 0deg); /* #2e2e2e, as defined by the source */
+  --porto-neutral-heading: #434447;
+  --porto-neutral-600: #5f5f5f;
+  --porto-neutral-500: #999;
+  --porto-neutral-dot: #b6b8ba;
+  --porto-neutral-300: #c8c8c8;
+  --porto-neutral-200: #e0e0e0;
+  --porto-neutral-100: #f7f7f7;
+  --porto-neutral-0: #fff;
+  --porto-hover-overlay: rgb(67 68 71 / 8%);
+
+  /* semantic */
+  --background-color: var(--porto-neutral-0);
+  --text-color: var(--porto-neutral-text);
+  --heading-color: var(--porto-neutral-heading);
+  --link-color: var(--porto-blue-900);
+  --link-hover-color: var(--porto-blue-900);
+  --border-color: var(--porto-neutral-200);
+  --light-color: var(--porto-neutral-100);
+  --dark-color: var(--porto-neutral-800);
+
+  /* fonts */
+  --body-font-family: "Open Sans", "Open Sans Fallback", sans-serif;
+  --heading-font-family: "Porto Roobert", "Open Sans", sans-serif;
+
+  /* type scale (mobile first) */
+  --heading-font-size-xxl: 2.6rem; /* 26px, hero h1 */
+  --heading-line-height-xxl: 3rem;
+  --heading-font-size-xl: 2.4rem; /* 24px, section h2 */
+  --heading-line-height-xl: 2.8rem;
+  --heading-font-size-l: 1.8rem; /* 18px, card h3 */
+  --heading-line-height-l: 2.2rem;
+  --heading-font-size-m: 1.8rem;
+  --heading-line-height-m: 2.2rem;
+  --body-font-size-m: 1.6rem;
+  --body-line-height-m: 2.4rem;
+  --body-font-size-s: 1.4rem;
+  --body-line-height-s: 2rem;
+  --body-font-size-xs: 1.2rem;
+  --body-font-size-xxs: 1rem;
+
+  /* shape */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+
+  /* layout */
+  --content-max-width: 1728px;
+  --content-padding: 20px;
+  --section-spacing: 40px;
+  --section-spacing-small: 16px;
+  --button-height: 52px;
+  --nav-height: 6rem;
+}
+
+@media (min-width: 900px) {
+  :root {
+    --heading-font-size-xxl: 4rem; /* 40px */
+    --heading-line-height-xxl: 4.4rem;
+    --heading-font-size-xl: 3.2rem; /* 32px */
+    --heading-line-height-xl: 3.6rem;
+    --heading-font-size-l: 2rem; /* 20px */
+    --heading-line-height-l: 2.4rem;
+    --heading-font-size-m: 2rem;
+    --heading-line-height-m: 2.4rem;
+    --content-padding: 64px;
+    --section-spacing: 80px;
+    --section-spacing-small: 32px;
+    --nav-height: 11.7rem; /* 60px brand row + 57px menu row */
+  }
+}
+
+/* Open Sans (variable 400–700, latin subset covers Portuguese), self-hosted and
+   preloaded in head.html so text renders in the final font without layout shift */
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/open-sans-latin.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 700;
+  font-stretch: 100%;
+}
+
+/* metric-matched fallback for Open Sans to limit layout shift */
+@font-face {
+  font-family: "Open Sans Fallback";
+  size-adjust: 105.5%;
+  ascent-override: 101%;
+  src: local("Arial");
+}

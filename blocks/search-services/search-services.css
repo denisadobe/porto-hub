@@ -1,0 +1,188 @@
+/* search-services: values from portoseguro.com.br/servicos .products-search-bar */
+.search-services {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.search-services .search-services-box {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 48px;
+  margin: 0 0 4px;
+  border: 1px solid #b3b3b3;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.search-services .search-services-box:focus-within {
+  border-color: var(--porto-blue-650);
+}
+
+.search-services .search-services-label {
+  position: relative;
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+}
+
+.search-services .search-services-input,
+.search-services .search-services-input:hover {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 16px 52px 8px 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #6b6b6b; /* source #808080 is 3.9:1 on white; #6b6b6b passes WCAG AA (5.3:1) */
+  font-family: var(--body-font-family);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 2rem;
+  appearance: none;
+  outline: none;
+}
+
+.search-services .search-services-input:focus,
+.search-services .search-services-input:not(:placeholder-shown) {
+  color: var(--porto-neutral-900);
+}
+
+.search-services .search-services-input::-webkit-search-decoration,
+.search-services .search-services-input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* floating label (source: .input__label) */
+.search-services .search-services-placeholder {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  max-width: calc(100% - 64px);
+  overflow: hidden;
+  color: var(--porto-neutral-900);
+  font-family: var(--body-font-family);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 2rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+.search-services .search-services-input:focus + .search-services-placeholder,
+.search-services .search-services-input:not(:placeholder-shown) + .search-services-placeholder {
+  top: 4px;
+  color: #6b6b6b; /* source #808080 is 3.9:1 on white; #6b6b6b passes WCAG AA (5.3:1) */
+  font-size: 1rem;
+}
+
+.search-services .search-services-submit {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--porto-neutral-900);
+  cursor: pointer;
+}
+
+.search-services .search-services-submit:focus-visible {
+  outline: 2px solid var(--porto-blue-650);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* magnifier glyph (source: icomoon icon-Magnifier-glass, 28px) */
+.search-services .search-services-icon {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background-color: currentcolor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M7.6 9.4a3.8 3.8 0 0 1 2.4-2.4'/%3E%3Cpath d='M16.2 16.2l6.6 6.6' stroke-width='1.7'/%3E%3C/svg%3E") center / 28px 28px no-repeat;
+}
+
+.search-services .search-services-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  max-height: 240px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background-color: var(--porto-neutral-0);
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: var(--radius-md);
+}
+
+.search-services .search-services-results[hidden] {
+  display: none;
+}
+
+.search-services .search-services-results li {
+  margin: 0;
+}
+
+.search-services .search-services-results a:any-link {
+  display: block;
+  padding: 20px;
+  color: var(--porto-neutral-800);
+  text-decoration: none;
+}
+
+.search-services .search-services-results a:hover {
+  background-color: #f2faff;
+  text-decoration: none;
+}
+
+.search-services .search-services-results .search-services-no-results {
+  padding: 20px;
+  color: var(--porto-neutral-800);
+}
+
+@media (min-width: 900px) {
+  .search-services .search-services-box {
+    height: 70px;
+  }
+
+  .search-services .search-services-input,
+  .search-services .search-services-input:hover {
+    font-size: 2rem;
+  }
+
+  .search-services .search-services-placeholder {
+    top: 24px;
+    color: #6b6b6b; /* source #808080 is 3.9:1 on white; #6b6b6b passes WCAG AA (5.3:1) */
+    font-size: 2rem;
+  }
+
+  .search-services .search-services-input:focus + .search-services-placeholder,
+  .search-services .search-services-input:not(:placeholder-shown) + .search-services-placeholder {
+    top: 4px;
+    font-size: 1.2rem;
+  }
+
+  .search-services .search-services-submit {
+    top: 24px;
+  }
+
+  .search-services .search-services-box:focus-within .search-services-submit,
+  .search-services .search-services-box:has(.search-services-input:not(:placeholder-shown)) .search-services-submit {
+    color: var(--porto-blue-650);
+  }
+}

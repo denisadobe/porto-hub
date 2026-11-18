@@ -1,0 +1,24 @@
+{
+  "variantName": "columns-video",
+  "baseBlock": "columns",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Two-column layout with rich text beside an embedded video",
+    "description": "2x1 layout: left column H2 'Cuidado Porto a qualquer hora' with bulleted list (bold lead-ins); right column embedded YouTube video (9FF4w-Bbc4g).",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row, two cells. Cell 1: heading and bulleted list (bold lead-ins). Cell 2: a YouTube, Vimeo or .mp4 link, optionally with a poster image (poster: click to play; no poster: the embed loads when scrolled into view)",
+    "blockContent": "H2 + 5-item benefit list beside a YouTube video",
+    "source": "One row, two cells: cell 1 H2 'Cuidado Porto a qualquer hora' + bulleted list with bold lead-ins; cell 2 link https://www.youtube.com/watch?v=9FF4w-Bbc4g (poster image i.ytimg.com/vi_webp/9FF4w-Bbc4g/sddefault.webp optional) rendered as an embed."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Text + video feature sections, e.g. \"Cuidado Porto a qualquer hora\".",
+  "reuseGuidance": "Reuse whenever a columns row pairs text with a video. Cells without a video link behave like plain columns.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

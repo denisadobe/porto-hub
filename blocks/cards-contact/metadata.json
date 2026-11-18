@@ -1,0 +1,24 @@
+{
+  "variantName": "cards-contact",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Equal-width bordered contact cards with title, description and full-width button",
+    "description": "2 equal bordered rounded cards, each with H3 title, short description and full-width outlined blue button.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row per card, single cell: heading, description paragraph, CTA link alone in a paragraph (external links such as wa.me open in a new tab). An optional image cell is supported",
+    "blockContent": "2 bordered contact cards with title, description and outlined button",
+    "source": "One single-cell row per card: H3 title, description paragraph, CTA link (wa.me URLs)."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Customer service / contact channel cards.",
+  "reuseGuidance": "Reuse for text-only action cards. Use cards-product for priced items.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

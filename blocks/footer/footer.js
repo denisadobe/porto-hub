@@ -1,172 +1,219 @@
-import { getRootPath, isMultistore } from '@dropins/tools/lib/aem/configs.js';
-// Dropin Components
-import {
-  Button,
-  provider as UI,
-} from '@dropins/tools/components.js';
+import { isMultistore } from '@dropins/tools/lib/aem/configs.js';
 
-// Block-level
-import createModal from '../modal/modal.js';
-import { getMetadata } from '../../scripts/aem.js';
-import { loadFragment } from '../fragment/fragment.js';
+/*
+ * Porto footer. footer.plain.html sections (all copy, links and images live there):
+ *   1. heading + list of icon links            (quick links)
+ *   2. heading + one or more link lists        (link columns)
+ *   3. heading + social icon list, heading + store badges paragraph
+ *   4. paragraph (drawer trigger label), heading + link list (drawer content)
+ *   5. list of legal links
+ *   6. company paragraphs
+ */
+
+const isDesktop = window.matchMedia('(width >= 900px)');
+const CHEVRON = '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false"><path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+let accordionId = 0;
 
 /**
- * Toggles all storeSelector sections
- * @param {Element} sections The container element
- * @param {Boolean} expanded Whether the element should be expanded or collapsed
+ * Mobile: column titles become accordion toggles (several can be open);
+ * desktop: plain headings with the lists always visible.
  */
-function toggleStoreDropdown(sections, expanded = false) {
-  sections
-    .querySelectorAll('.storeview-modal .default-content-wrapper > ul > li')
-    .forEach((section) => {
-      section.setAttribute('aria-expanded', expanded);
+function setupAccordion(col) {
+  const title = col.querySelector('.footer-col-title');
+  const content = title?.nextElementSibling;
+  if (!title || !content) return;
+  accordionId += 1;
+  content.id = content.id || `footer-col-content-${accordionId}`;
+  const label = title.textContent.trim();
+
+  const toMobile = () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'footer-col-toggle';
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', content.id);
+    button.innerHTML = `<span></span><span class="footer-col-toggle-icon">${CHEVRON}</span>`;
+    button.firstElementChild.textContent = label;
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') !== 'true';
+      button.setAttribute('aria-expanded', open);
+      col.classList.toggle('is-open', open);
     });
+    title.replaceChildren(button);
+    col.classList.remove('is-open');
+  };
+  const toDesktop = () => {
+    title.textContent = label;
+    col.classList.remove('is-open');
+  };
+  const apply = () => (isDesktop.matches ? toDesktop() : toMobile());
+  apply();
+  isDesktop.addEventListener('change', apply);
 }
 
-/**
- * loads and decorates the footer
- * @param {Element} block The footer block element
- */
-export default async function decorate(block) {
-  const root = getRootPath();
-  // Load Footer as Fragment
-  const footerMeta = getMetadata('footer');
-  const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
-  const fragment = await loadFragment(footerPath);
+const CLOSE_ICON = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M4 4l16 16M20 4L4 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
 
-  // decorate footer DOM
-  block.textContent = '';
-  const footer = document.createElement('div');
+/** Fetches the footer fragment: /content first (local preview), then the site root (DA/EDS). */
+async function fetchFooter() {
+  let resp = await fetch('/content/footer.plain.html');
+  if (!resp.ok) resp = await fetch('/footer.plain.html');
+  if (!resp.ok) return null;
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = await resp.text();
+  const base = new URL(resp.url);
+  wrapper.querySelectorAll('img[src]').forEach((img) => {
+    img.src = new URL(img.getAttribute('src'), base).href;
+    img.loading = 'lazy';
+  });
+  return wrapper;
+}
 
-  // Footer content - Store Switcher
-  if (isMultistore()) {
-    footer.innerHTML = `
-      <div class="storeview-switcher-button"></div>
-    `;
+function column(className, ...nodes) {
+  const col = document.createElement('div');
+  col.className = `footer-col ${className}`;
+  col.append(...nodes.filter(Boolean));
+  return col;
+}
 
-    // Container and component refs
-    let modal;
+function withClass(el, className) {
+  if (el) el.classList.add(className);
+  return el;
+}
 
-    // Modal Actions
-    const showModal = async (content) => {
-      modal = await createModal([content]);
-      modal.showModal();
-    };
+/** Builds a side drawer (dialog) from a heading + list of links. */
+function buildDrawer(heading, list) {
+  const overlay = document.createElement('div');
+  overlay.className = 'footer-drawer-overlay';
+  overlay.hidden = true;
 
-    // Rendering the Store Switcher Modal Content
-    const $storeSwitcherBtn = footer.querySelector(
-      '.storeview-switcher-button',
-    );
+  const drawer = document.createElement('div');
+  drawer.className = 'footer-drawer';
+  drawer.setAttribute('role', 'dialog');
+  drawer.setAttribute('aria-modal', 'true');
+  drawer.hidden = true;
+  drawer.id = 'footer-drawer';
 
-    // Store Switcher Modal Content
-    const storeSwitcherPath = '/store-switcher';
-    let fragmentStoreView;
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'footer-drawer-close';
+  close.setAttribute('aria-label', 'Fechar');
+  close.innerHTML = CLOSE_ICON;
 
-    try {
-      fragmentStoreView = await loadFragment(storeSwitcherPath);
-      if (!fragmentStoreView) throw new Error(`Footer does not render due to Store Switcher fragment (${storeSwitcherPath}) not found`);
-    } catch (error) {
-      console.error('Error loading store switcher fragment:', error);
-      return;
-    }
-
-    // Store Switcher Modal Content
-    const storeSwitcher = document.createElement('div');
-
-    // Return Storename from stores-switcher
-    const selected = [...fragmentStoreView.querySelectorAll('a')].find((a) => {
-      const url = new URL(a.href);
-      return url.pathname.startsWith(root);
-    });
-
-    storeSwitcher.id = 'storeview-modal';
-    while (fragmentStoreView.firstElementChild) {
-      storeSwitcher.append(fragmentStoreView.firstElementChild);
-    }
-
-    // create classes for storeview modal sections
-    const classes = ['storeview-title', 'storeview-list'];
-    classes.forEach((c, i) => {
-      const section = storeSwitcher.children[i];
-      if (section) section.classList.add(`storeview-modal-${c}`);
-    });
-
-    // Store Switcher Modal Content - Store View Title
-    const storeViewTitle = storeSwitcher.querySelector('.storeview-modal-storeview-title');
-    const title = storeViewTitle.querySelector('h3');
-    if (title) {
-      title.className = '';
-      title.closest('h3').classList.add('storeview-modal-storeview-title');
-      title.setAttribute('tabindex', '0');
-    }
-
-    // Storeview List
-    const storeViewList = storeSwitcher.querySelector('.storeview-modal-storeview-list');
-
-    if (storeViewList && storeViewList.children.length) {
-      // Add storeview-selection class to parent UL
-      storeViewList
-        .querySelectorAll(':scope .default-content-wrapper > ul')
-        .forEach((storeView) => {
-          if (storeView.querySelector('ul')) storeView.classList.add('storeview-selection');
-        });
-
-      // if multiple stores exist per region, add class storeviews and click events for accordion
-      storeViewList.querySelectorAll('.default-content-wrapper > ul > li > ul').forEach((storeRegion) => {
-        if (storeRegion.children.length > 1) {
-          if (storeRegion.querySelector('ul')) storeRegion.classList.add('storeviews');
-
-          // Accessiblity: addeventlistener for 'click' and keyboard event and tab indexes
-          storeViewList.querySelectorAll(':scope li').forEach((storeView) => {
-            const link = storeView.closest('a');
-            if (link) link.setAttribute('tabindex', '0');
-            storeView.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                const expanded = storeView.getAttribute('aria-expanded') === 'true';
-                toggleStoreDropdown(storeViewList);
-                storeView.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-              }
-            });
-            storeView.addEventListener('click', () => {
-              const expanded = storeView.getAttribute('aria-expanded') === 'true';
-              toggleStoreDropdown(storeViewList);
-              storeView.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-            });
-          });
-        }
-      });
-
-      // If only one storeview link in region, convert parent UL into the li and remove the child UL
-      storeViewList.querySelectorAll('.default-content-wrapper > ul > li > ul').forEach((storeRegion) => {
-        const li = storeRegion.closest('li');
-
-        if (storeRegion.children.length <= 1) {
-          li.classList.add('storeview-single-store');
-          const ulParent = li.closest('ul');
-          const replacedChild = (storeRegion.firstElementChild);
-          replacedChild.className = 'storeview-single-store';
-
-          ulParent.replaceChild(replacedChild, li);
-          ulParent.setAttribute('tabindex', '0');
-        } else {
-          li.classList.add('storeview-multiple-stores');
-          li.setAttribute('tabindex', '0');
-        }
-      });
-
-      UI.render(Button, {
-        children: `${selected.text}`,
-        'data-testid': 'storeview-switcher-button',
-        className: 'storeview-switcher-button',
-        size: 'medium',
-        variant: 'teritary',
-        onClick: () => {
-          showModal(storeSwitcher);
-        },
-      })($storeSwitcherBtn);
-    }
+  if (heading) {
+    heading.className = 'footer-drawer-title';
+    heading.id = 'footer-drawer-title';
+    drawer.setAttribute('aria-labelledby', heading.id);
   }
-  while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
+  if (list) list.className = 'footer-drawer-links';
+  drawer.append(close, ...[heading, list].filter(Boolean));
 
-  block.append(footer);
+  let opener;
+  const setOpen = (open) => {
+    if (open) {
+      opener = document.activeElement;
+      overlay.hidden = false;
+      drawer.hidden = false;
+      // next frame so the slide-in transition runs
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        drawer.classList.add('is-open');
+        overlay.classList.add('is-open');
+      }));
+      document.body.style.overflowY = 'hidden';
+      close.focus({ preventScroll: true });
+    } else {
+      drawer.classList.remove('is-open');
+      overlay.classList.remove('is-open');
+      document.body.style.overflowY = '';
+      setTimeout(() => {
+        drawer.hidden = true;
+        overlay.hidden = true;
+      }, 500);
+      opener?.focus({ preventScroll: true });
+    }
+  };
+  close.addEventListener('click', () => setOpen(false));
+  overlay.addEventListener('click', () => setOpen(false));
+  drawer.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+    if (e.key !== 'Tab') return;
+    // keep focus inside the dialog
+    const focusables = [...drawer.querySelectorAll('a[href], button')];
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+  return { overlay, drawer, open: () => setOpen(true) };
+}
+
+export default async function decorate(block) {
+  const fragment = await fetchFooter();
+  if (!fragment) return;
+  const [quick, about, brand, partners, legal, company] = [...fragment.children];
+
+  const main = document.createElement('div');
+  main.className = 'footer-main';
+
+  // 1. quick links (icon + label)
+  if (quick) {
+    main.append(column('footer-quick', withClass(quick.querySelector('h3'), 'footer-col-title'), withClass(quick.querySelector('ul'), 'footer-links')));
+  }
+
+  // 2. link columns (one or more lists side by side)
+  if (about) {
+    const lists = document.createElement('div');
+    lists.className = 'footer-link-columns';
+    about.querySelectorAll(':scope > ul').forEach((ul) => lists.append(withClass(ul, 'footer-links')));
+    main.append(column('footer-about', withClass(about.querySelector('h3'), 'footer-col-title'), lists));
+  }
+
+  // 3. social + app stores + partners drawer
+  const brandCol = column('footer-brand');
+  if (brand) {
+    const [socialTitle, storesTitle] = brand.querySelectorAll('h3');
+    withClass(socialTitle, 'footer-brand-title');
+    withClass(storesTitle, 'footer-brand-title');
+    brandCol.append(socialTitle, withClass(brand.querySelector('ul'), 'footer-social-links'), storesTitle, withClass(brand.querySelector('p'), 'footer-stores'));
+  }
+  let drawer;
+  if (partners) {
+    const label = partners.querySelector('p')?.textContent.trim();
+    drawer = buildDrawer(partners.querySelector('h2'), partners.querySelector('ul'));
+    const holder = document.createElement('div');
+    holder.className = 'footer-partners';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'footer-partners-button';
+    button.textContent = label;
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-controls', drawer.drawer.id);
+    button.addEventListener('click', drawer.open);
+    holder.append(button);
+    brandCol.append(holder);
+  }
+  main.append(brandCol);
+
+  // 4. bottom bar: rule, legal links, company details
+  const bottom = document.createElement('div');
+  bottom.className = 'footer-bottom';
+  bottom.append(document.createElement('hr'));
+  if (legal) bottom.append(withClass(legal.querySelector('ul'), 'footer-legal'));
+  if (company) {
+    const details = document.createElement('div');
+    details.className = 'footer-company';
+    details.append(...company.querySelectorAll('p'));
+    bottom.append(details);
+  }
+  main.append(bottom);
+
+  main.querySelectorAll('.footer-quick, .footer-about').forEach(setupAccordion);
+
+  block.textContent = '';
+  block.append(main);
+  if (drawer) block.append(drawer.overlay, drawer.drawer);
+
+  if (isMultistore()) {
+    const { default: renderStoreSwitcher } = await import('./store-switcher.js');
+    await renderStoreSwitcher(bottom);
+  }
 }

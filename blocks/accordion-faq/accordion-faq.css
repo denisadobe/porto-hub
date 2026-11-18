@@ -1,0 +1,141 @@
+/* accordion-faq: values from section.s-accordion (light) on portoseguro.com.br/servicos */
+.accordion-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--porto-neutral-text);
+}
+
+.accordion-faq .accordion-faq-item {
+  background-color: #f0f0f2;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.accordion-faq .accordion-faq-item-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.accordion-faq .accordion-faq-item-label::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-faq .accordion-faq-item[open] .accordion-faq-item-label {
+  border-bottom: 1px solid #dadbdd;
+}
+
+.accordion-faq .accordion-faq-item-title {
+  flex: 1 1 0%;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: 500;
+  line-height: var(--heading-line-height-l);
+  letter-spacing: 0.2px;
+  color: var(--porto-neutral-text);
+}
+
+/* plus (closed) / minus (open), 24px box with 1px strokes like the source SVGs */
+.accordion-faq .accordion-faq-item-icon {
+  position: relative;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--porto-neutral-text);
+}
+
+.accordion-faq .accordion-faq-item-icon::before,
+.accordion-faq .accordion-faq-item-icon::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 1px;
+  border-radius: 1px;
+  background: currentcolor;
+  transform: translateY(-50%);
+  transition: transform 0.2s;
+}
+
+.accordion-faq .accordion-faq-item-icon::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.accordion-faq .accordion-faq-item[open] .accordion-faq-item-icon::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+/* source: padding 24px 24px 8px plus 16px bottom margin on the last p/ul */
+.accordion-faq .accordion-faq-item-body {
+  padding: 24px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--porto-neutral-900);
+}
+
+.accordion-faq .accordion-faq-item-body p,
+.accordion-faq .accordion-faq-item-body ul,
+.accordion-faq .accordion-faq-item-body ol {
+  margin: 0 0 16px;
+}
+
+.accordion-faq .accordion-faq-item-body p {
+  line-height: 1.6;
+}
+
+.accordion-faq .accordion-faq-item-body ul,
+.accordion-faq .accordion-faq-item-body ol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.accordion-faq .accordion-faq-item-body li {
+  margin-left: 24px;
+  line-height: 20px;
+  list-style: disc;
+}
+
+.accordion-faq .accordion-faq-item-body ol > li {
+  list-style: decimal;
+}
+
+.accordion-faq .accordion-faq-item-body li::marker {
+  font-size: 10px;
+}
+
+.accordion-faq .accordion-faq-item-body > :first-child {
+  margin-top: 0;
+}
+
+.accordion-faq .accordion-faq-item-body > :last-child {
+  margin-bottom: 0;
+}
+
+.accordion-faq .accordion-faq-item-body a:any-link {
+  color: var(--porto-blue-900);
+  text-decoration: none;
+}
+
+.accordion-faq .accordion-faq-item-body a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 900px) {
+  .accordion-faq .accordion-faq-item-label {
+    padding: 32px;
+  }
+
+  /* source: padding 32px 32px 16px plus 16px bottom margin on the last p/ul */
+  .accordion-faq .accordion-faq-item-body {
+    padding: 32px;
+  }
+}

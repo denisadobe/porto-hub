@@ -1,0 +1,24 @@
+{
+  "variantName": "accordion-link-list",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Disclosure holding a long link list that flows into 4 columns; open on desktop, collapsed on mobile",
+    "description": "H2 then 73 blue text links flowing into 4 columns on desktop; on mobile the list sits in a collapsed details. Source duplicates the list (details.desk-only and details.mobile-only): use only one copy.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row. Cell 1: title (\"Todos os nossos serviços\"). Cell 2: unordered list of links. Extra rows add more disclosures with the same behaviour",
+    "blockContent": "Disclosure titled 'Todos os nossos serviços' with a list of 73 service links in 4 columns",
+    "source": "One row: cell 1 'Todos os nossos serviços'; cell 2 unordered list of 73 links (use only details.desk-only, ignore the duplicate details.mobile-only). Open by default on desktop, list flows into 4 columns."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Site-map style \"all services\" lists at the bottom of a page.",
+  "reuseGuidance": "Reuse for any long link index. Use accordion-faq for question/answer content.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

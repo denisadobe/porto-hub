@@ -1,0 +1,336 @@
+/* stylelint-disable no-descending-specificity -- state rules are grouped per component */
+
+/* carousel-hero-promo: Porto "s-banner-hero" (slim, background-responsive) */
+
+/* full-bleed: cancel the section wrapper's side padding */
+.carousel-hero-promo {
+  position: relative;
+  margin-inline: calc(-1 * var(--content-padding));
+  color: var(--porto-neutral-0);
+}
+
+.carousel-hero-promo .carousel-hero-promo-slides-container {
+  position: relative;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slides {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: scroll clip;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slides::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide {
+  position: relative;
+  flex: 0 0 100%;
+  width: 100%;
+  height: 350px;
+  display: flex;
+  background-color: var(--porto-neutral-text);
+  scroll-snap-align: start;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-image,
+.carousel-hero-promo .carousel-hero-promo-slide-image picture {
+  position: absolute;
+  inset: 0;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+/* content covers the slide so the desktop disclaimer anchors to the slide */
+.carousel-hero-promo .carousel-hero-promo-slide-content {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 32px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-content > * {
+  margin: 0;
+}
+
+.carousel-hero-promo .carousel-hero-promo-title {
+  max-width: 500px;
+  margin: 0 0 8px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xxl);
+  font-weight: 500;
+  line-height: var(--heading-line-height-xxl);
+  color: var(--porto-neutral-0);
+}
+
+.carousel-hero-promo .carousel-hero-promo-title strong {
+  font-family: var(--body-font-family);
+  font-weight: 700;
+}
+
+.carousel-hero-promo .carousel-hero-promo-subtitle {
+  max-width: 500px;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: 500;
+  line-height: var(--heading-line-height-l);
+  letter-spacing: 0.02rem;
+  color: var(--porto-neutral-0);
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-content > .carousel-hero-promo-subtitle {
+  margin-bottom: 16px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-content > .button-wrapper {
+  align-self: stretch;
+}
+
+.carousel-hero-promo a.button:any-link {
+  width: 100%;
+}
+
+.carousel-hero-promo .carousel-hero-promo-slide-content > .carousel-hero-promo-disclaimer {
+  margin-top: 24px;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xxs);
+  font-weight: 400;
+  line-height: 1.4rem;
+  color: var(--porto-neutral-0);
+}
+
+/* coupon: outlined copy button */
+.carousel-hero-promo .carousel-hero-promo-copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: fit-content;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--porto-neutral-0);
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--porto-neutral-0);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 700;
+  line-height: 1.6rem;
+  letter-spacing: 0.02rem;
+  cursor: pointer;
+}
+
+.carousel-hero-promo .carousel-hero-promo-copy:focus-visible {
+  outline: 3px solid var(--porto-blue-400);
+  outline-offset: 2px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-copy code {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  background: none;
+  padding: 0;
+}
+
+.carousel-hero-promo .carousel-hero-promo-copy-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-copy-action svg {
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* prev / next arrows (desktop only) */
+.carousel-hero-promo .carousel-hero-promo-navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  display: none;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 8px;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.carousel-hero-promo .carousel-hero-promo-prev,
+.carousel-hero-promo .carousel-hero-promo-next {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--porto-neutral-0);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.carousel-hero-promo .carousel-hero-promo-prev:hover,
+.carousel-hero-promo .carousel-hero-promo-next:hover {
+  background: rgb(255 255 255 / 20%);
+  border-color: rgb(255 255 255 / 24%);
+}
+
+.carousel-hero-promo .carousel-hero-promo-prev:focus-visible,
+.carousel-hero-promo .carousel-hero-promo-next:focus-visible,
+.carousel-hero-promo .carousel-hero-promo-indicator button:focus-visible {
+  outline: 3px solid var(--porto-blue-400);
+  outline-offset: 2px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-prev svg,
+.carousel-hero-promo .carousel-hero-promo-next svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-prev svg {
+  transform: translateX(-1px);
+}
+
+.carousel-hero-promo .carousel-hero-promo-next svg {
+  transform: translateX(1px) scaleX(-1);
+}
+
+/* dot pagination: passed = white, upcoming = grey, active = pill with progress */
+.carousel-hero-promo nav {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  z-index: 2;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.carousel-hero-promo .carousel-hero-promo-indicators {
+  display: flex;
+
+  /* 8px dots + 16px gap keep 24px between centres (WCAG 2.5.8 target spacing) */
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.carousel-hero-promo .carousel-hero-promo-indicator {
+  display: block;
+}
+
+.carousel-hero-promo .carousel-hero-promo-indicator button {
+  position: relative;
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--porto-neutral-dot);
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.carousel-hero-promo .carousel-hero-promo-indicator.passed button {
+  background: var(--porto-neutral-0);
+}
+
+.carousel-hero-promo .carousel-hero-promo-indicator.active button {
+  width: 70px;
+  border-radius: 6px;
+}
+
+.carousel-hero-promo .carousel-hero-promo-progress {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--porto-neutral-0);
+  animation: carousel-hero-promo-fill 5s linear forwards;
+}
+
+.carousel-hero-promo:hover .carousel-hero-promo-progress,
+.carousel-hero-promo:focus-within .carousel-hero-promo-progress {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-hero-promo-fill {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-hero-promo .carousel-hero-promo-progress {
+    width: 100%;
+    animation: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .carousel-hero-promo .carousel-hero-promo-slide {
+    height: 300px;
+    min-height: 300px;
+  }
+
+  .carousel-hero-promo .carousel-hero-promo-slide-content {
+    justify-content: center;
+    padding: 64px;
+  }
+
+  .carousel-hero-promo .carousel-hero-promo-slide-content > .button-wrapper {
+    align-self: flex-start;
+  }
+
+  .carousel-hero-promo a.button:any-link {
+    width: auto;
+  }
+
+  .carousel-hero-promo .carousel-hero-promo-slide-content > .carousel-hero-promo-disclaimer {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%);
+  }
+
+  .carousel-hero-promo .carousel-hero-promo-navigation {
+    display: flex;
+  }
+
+  .carousel-hero-promo nav {
+    visibility: visible;
+    pointer-events: auto;
+  }
+}

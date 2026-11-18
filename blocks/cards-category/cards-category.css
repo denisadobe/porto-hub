@@ -1,0 +1,151 @@
+/* cards-category: values from portoseguro.com.br/servicos .section_products_by_category__categories */
+.cards-category {
+  padding: 20px 2px 2px;
+  margin-bottom: 24px;
+}
+
+.cards-category .cards-category-list {
+  --partial-visible: 48px;
+  --items-per-view: 4;
+
+  display: grid;
+  grid-auto-columns: calc((100% - var(--partial-visible)) / var(--items-per-view));
+  grid-auto-flow: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.cards-category .cards-category-list::-webkit-scrollbar {
+  display: none;
+}
+
+.cards-category .cards-category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+  scroll-snap-align: start;
+}
+
+.cards-category .cards-category-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--porto-neutral-800);
+  font-family: var(--body-font-family);
+  text-align: center;
+  cursor: pointer;
+}
+
+.cards-category .cards-category-chip:focus-visible {
+  outline: none;
+}
+
+.cards-category .cards-category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 10px;
+  border-radius: var(--radius-lg);
+  background-color: var(--porto-neutral-100);
+  color: var(--porto-neutral-800);
+  font-size: 2.4rem;
+  overflow: hidden;
+}
+
+.cards-category .cards-category-chip[aria-pressed='true'] .cards-category-icon {
+  background-color: var(--porto-blue-200);
+}
+
+.cards-category .cards-category-chip:active .cards-category-icon {
+  background-color: var(--porto-blue-200);
+}
+
+.cards-category .cards-category-chip:focus-visible .cards-category-icon {
+  outline: 2px solid var(--porto-blue-900);
+  outline-offset: 2px;
+}
+
+.cards-category .cards-category-icon picture,
+.cards-category .cards-category-icon img,
+.cards-category .cards-category-icon svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.cards-category .cards-category-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #404040;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.2rem;
+}
+
+@media (min-width: 480px) {
+  .cards-category .cards-category-list {
+    --partial-visible: 56px;
+    --items-per-view: 5;
+  }
+}
+
+@media (min-width: 640px) {
+  .cards-category .cards-category-list {
+    --partial-visible: 64px;
+    --items-per-view: 6;
+
+    gap: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  .cards-category .cards-category-list {
+    --items-per-view: 9;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cards-category .cards-category-list {
+    --partial-visible: 34px;
+    --items-per-view: 13;
+
+    gap: 12px;
+  }
+}
+
+@media (min-width: 1224px) {
+  .cards-category {
+    margin-bottom: 32px;
+  }
+
+  .cards-category .cards-category-list {
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-columns: unset;
+    grid-auto-flow: unset;
+    overflow-x: auto;
+    scroll-snap-type: none;
+    scrollbar-width: auto;
+  }
+
+  .cards-category .cards-category-item {
+    scroll-snap-align: unset;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "variantName": "carousel-hero-promo",
+  "baseBlock": "carousel",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Full-width rotating promo banner with a photo background per slide, prev/next arrows, dot pagination and autoplay (pauses on hover/focus)",
+    "description": "Full-width rotating banner with photo background per slide, white text on the left, prev/next arrows and dot pagination. Photo background belongs to the block.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row per slide. Cell 1: background image (only the image). Cell 2: heading (title), subtitle paragraph, CTA link, optional coupon as inline code (`PORTOPLUS`, rendered with a Copiar button), fine-print paragraphs after the CTA/coupon become the disclaimer",
+    "blockContent": "3 rotating promo slides with background photo, title, subtitle, CTA or coupon, disclaimer",
+    "source": "One row per slide: cell 1 background image (source img is the 430x764 mobile crop; desktop source in <picture><source>), cell 2 H1 title, subtitle paragraph (slide 1/3 source H2, slide 2 second H1 -> keep only first as heading, subtitle as paragraph), CTA link, coupon text 'Cupom: PORTOPLUS' (copy-to-clipboard button becomes text/code), fine-print disclaimer paragraph."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Top-of-page promotional hero with 1 to N rotating campaigns. A single row renders a static banner without controls.",
+  "reuseGuidance": "Reuse for any hero campaign carousel with background photography. For a static hero without rotation, use hero.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

@@ -1,0 +1,24 @@
+{
+  "variantName": "search-services",
+  "baseBlock": "search",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Service finder input that filters the cards-product cards on the same page as the user types",
+    "description": "Large outlined search input with magnifier icon; horizontal track of 11 round icon chips with labels (Destaques selected, light blue); count line '10 servicos disponiveis'; 3-column grid of bordered product cards with image, optional badge (NOVIDADE / Compre e Ganhe!), category eyebrow, title, price label + price, optional instalment text, grey benefit box (20% de desconto com Cartao Porto Bank) and full-width blue 'Compre agora' button.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "optional row with a query-index URL (/servicos/query-index.json), used only when the page has no cards-product block (shows a link dropdown instead); optional row with the placeholder text (default: \"Encontre o serviço que precisa\")",
+    "blockContent": "Service search input",
+    "source": "Single row: query index URL for services (e.g. /servicos/query-index.json); placeholder 'Encontre o serviço que precisa' as a second paragraph if supported. Filters the product cards below."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Place above cards-category and cards-product in the service listing section. Text search spans all categories.",
+  "reuseGuidance": "Reuse on any listing page that has a cards-product block. Communicates via the document event `services:search`.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

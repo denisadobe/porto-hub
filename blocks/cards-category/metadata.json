@@ -1,0 +1,24 @@
+{
+  "variantName": "cards-category",
+  "baseBlock": "cards",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Horizontal track of round icon chips that filter the cards-product cards on the same page by category",
+    "description": "Large outlined search input with magnifier icon; horizontal track of 11 round icon chips with labels (Destaques selected, light blue); count line '10 servicos disponiveis'; 3-column grid of bordered product cards with image, optional badge (NOVIDADE / Compre e Ganhe!), category eyebrow, title, price label + price, optional instalment text, grey benefit box (20% de desconto com Cartao Porto Bank) and full-width blue 'Compre agora' button.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row per chip. Cell 1: icon image. Cell 2: label, optionally linked to #<category-slug> (e.g. #ar-condicionado). The slug is the link hash, or the label slugified (accents removed). The first chip (Destaques) is the default and shows all cards; other chips show cards whose category eyebrow slug matches. The URL hash selects a chip, so links elsewhere on the page (hero CTAs) to #<slug> activate it",
+    "blockContent": "11 category filter chips (icon + label)",
+    "source": "One row per chip: cell 1 icon image, cell 2 label (linked to #<category-slug>, e.g. #ar-condicionado, #destaques; the hero CTAs link to these anchors). Destaques is selected by default."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "Place between search-services and cards-product. Chip slugs must match the category eyebrow text of the product cards (e.g. chip \"Ar-condicionado\" matches eyebrow \"Ar-condicionado\").",
+  "reuseGuidance": "Reuse for any category filter driving cards-product. Communicates via the document event `services:category`.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}

@@ -1,0 +1,24 @@
+{
+  "variantName": "accordion-faq",
+  "baseBlock": "accordion",
+  "canonicalModel": "standalone",
+  "visualCharacteristics": {
+    "purpose": "Stacked collapsible FAQ panels with a plus/minus indicator; also emits FAQPage structured data",
+    "description": "11 stacked light-grey (#efeff1 approx) rounded panels with question text and plus/minus icon on the right; answers contain paragraphs, lists, bold text and links.",
+    "section": {
+      "background": "#ffffff",
+      "backgroundImage": null,
+      "colored": false
+    }
+  },
+  "contentPattern": {
+    "structure": "one row per item. Cell 1: question. Cell 2: answer (paragraphs, lists, bold, links). Icons in the question cell are dropped",
+    "blockContent": "11 collapsible FAQ items",
+    "source": "One row per item: cell 1 question (summary text), cell 2 answer (paragraphs, lists, bold, links). Drop the plus/minus icon images."
+  },
+  "options": [],
+  "memberVariantIds": [],
+  "usage": "FAQ sections. Put the section heading as default content above the block.",
+  "reuseGuidance": "Reuse for any question/answer list. Use accordion-link-list for a single disclosure holding a link list.",
+  "sourceUrl": "https://www.portoseguro.com.br/servicos"
+}
