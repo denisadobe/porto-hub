@@ -107,8 +107,13 @@ jobs:
 
       - name: Deploy
         if: env.HAS_WORKSPACE == 'true'
-        # publishes the Commerce extensions (App Management + Admin UI SDK) for the Stage workspace
-        run: aio app deploy --no-build
+        # Deploys actions and the admin page. Registering the Commerce extensions in the workspace
+        # (publish) needs a USER login in the Developer Console API, so it is not done here: a
+        # workspace developer runs `aio app deploy` once with their own login. The App Management
+        # post-deploy hook checks that registration with the same user-only API, so CI skips it.
+        run: |
+          sed -i '/post-app-deploy/d' src/commerce-extensibility-1/ext.config.yaml
+          aio app deploy --no-build --no-publish
 
       - name: Smoke test
         if: env.HAS_WORKSPACE == 'true'
