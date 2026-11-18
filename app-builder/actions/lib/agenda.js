@@ -106,9 +106,7 @@ function freeUnits(agenda, regionId, date, shift, claimed) {
 async function availableSlots(region, { days, now } = {}) {
   const agenda = await loadAgenda();
   const claimed = await claimedUnits(region.id);
-  let dates = bookableDates(agenda, now);
-  if (days) dates = dates.slice(0, days);
-  const result = dates
+  const result = bookableDates(agenda, now)
     .map((date) => {
       const wd = weekday(date);
       const shifts = agenda.shifts
@@ -121,7 +119,8 @@ async function availableSlots(region, { days, now } = {}) {
         });
       return { date, ...dayLabels(date), shifts };
     })
-    .filter((d) => d.shifts.length);
+    .filter((d) => d.shifts.length)
+    .slice(0, days || undefined); // "days" = next N days that have shifts
   return {
     region,
     timeZone: agenda.timeZone,

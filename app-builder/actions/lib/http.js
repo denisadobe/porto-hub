@@ -1,13 +1,9 @@
 /*
- * Web action helpers: CORS for the storefront hosts, JSON responses and errors with
- * messages in Portuguese (shown to the customer as-is).
+ * Web action helpers: JSON responses and errors with messages in Portuguese (shown to the
+ * customer as-is). CORS: I/O Runtime adds "Access-Control-Allow-Origin: *" to web action
+ * responses and answers preflights itself; setting the header here too would produce an
+ * invalid combined value ("*,https://..."), so actions must not set it.
  */
-const ALLOWED_ORIGINS = [
-  /^https:\/\/([a-z0-9-]+--)?porto-hub--denisadobe\.aem\.(page|live)$/,
-  /^https:\/\/([a-z0-9-]+--)?porto-hub--denisadobe\.ue\.da\.live$/,
-  /^http:\/\/localhost(:\d+)?$/,
-];
-
 class HttpError extends Error {
   constructor(status, code, message, details) {
     super(message);
@@ -17,28 +13,20 @@ class HttpError extends Error {
   }
 }
 
-function corsHeaders(params) {
-  const origin = params?.__ow_headers?.origin;
-  const headers = {
-    'Content-Type': 'application/json',
-    'Cache-Control': 'no-store',
-    Vary: 'Origin',
-  };
-  if (origin && ALLOWED_ORIGINS.some((re) => re.test(origin))) {
-    headers['Access-Control-Allow-Origin'] = origin;
-  }
-  return headers;
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'Cache-Control': 'no-store',
+};
+
+function ok(body) {
+  return { statusCode: 200, headers: { ...HEADERS }, body };
 }
 
-function ok(params, body) {
-  return { statusCode: 200, headers: corsHeaders(params), body };
-}
-
-function fail(params, error) {
+function fail(error) {
   if (error instanceof HttpError) {
     return {
       statusCode: error.status,
-      headers: corsHeaders(params),
+      headers: { ...HEADERS },
       body: { error: { code: error.code, message: error.message, ...(error.details ? { details: error.details } : {}) } },
     };
   }
@@ -46,7 +34,7 @@ function fail(params, error) {
   console.error(error);
   return {
     statusCode: 500,
-    headers: corsHeaders(params),
+    headers: { ...HEADERS },
     body: { error: { code: 'internal', message: 'Não foi possível concluir agora. Tente novamente em instantes.' } },
   };
 }
@@ -63,13 +51,13 @@ function webAction(methods, handler) {
   return async (params = {}) => {
     try {
       requireMethod(params, ...methods);
-      return ok(params, await handler(params));
+      return ok(await handler(params));
     } catch (error) {
-      return fail(params, error);
+      return fail(error);
     }
   };
 }
 
 module.exports = {
-  HttpError, webAction, corsHeaders, ok, fail,
+  HttpError, webAction, ok, fail,
 };

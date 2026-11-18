@@ -10,7 +10,7 @@ One repository secret: `AIO_STAGE_WORKSPACE_JSON` holds the contents of Develope
 
 Base URL: `https://<namespace>.adobeioruntime.net/api/v1/web/porto-servico` (printed in the workflow summary).
 
-## API (public web actions, CORS for `*--porto-hub--denisadobe.aem.page|live`, `*.ue.da.live`, `localhost`)
+## API (public web actions; CORS `*` added by I/O Runtime — actions must not set it)
 
 | Action | Method | Input | Output |
 | --- | --- | --- | --- |

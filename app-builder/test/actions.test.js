@@ -38,10 +38,10 @@ async function firstFreeSlot(cep = '01310100', sku = 'ADB201') {
 }
 
 describe('coverage', () => {
-  test('served CEP returns region, address and CORS for the storefront', async () => {
+  test('served CEP returns region and address (CORS header left to I/O Runtime)', async () => {
     const res = await coverage.main(get({ cep: '01310-100', sku: 'ADB201' }));
     expect(res.statusCode).toBe(200);
-    expect(res.headers['Access-Control-Allow-Origin']).toBe(ORIGIN);
+    expect(res.headers['Access-Control-Allow-Origin']).toBeUndefined();
     expect(res.body).toMatchObject({
       cep: '01310-100', served: true, region: { id: 'sp-capital' }, address: { street: 'Avenida Paulista', city: 'São Paulo' },
     });
@@ -82,10 +82,8 @@ describe('coverage', () => {
     expect((await coverage.main(get({ cep: '13010000', sku: 'ADB201' }))).body.reason).toBe('service');
   });
 
-  test('rejects other HTTP methods and does not echo unknown origins', async () => {
+  test('rejects other HTTP methods', async () => {
     expect((await coverage.main(post({ cep: '01310100' }))).statusCode).toBe(405);
-    const res = await coverage.main({ __ow_method: 'get', __ow_headers: { origin: 'https://evil.example' }, cep: '01310100' });
-    expect(res.headers['Access-Control-Allow-Origin']).toBeUndefined();
   });
 });
 
@@ -102,6 +100,13 @@ describe('slots', () => {
       d.shifts.forEach((s) => expect(s.remaining).toBeGreaterThanOrEqual(0));
     });
     expect(res.body.holdMinutes).toBe(15);
+  });
+
+  test('days=N returns the next N days that have shifts', async () => {
+    const res = await slots.main(get({ cep: '01310100', sku: 'ADB201', days: '3' }));
+    expect(res.body.days).toHaveLength(3);
+    res.body.days.forEach((d) => expect(d.shifts.length).toBeGreaterThan(0));
+    expect((await slots.main(get({ cep: '01310100', sku: 'ADB201', days: '0' }))).statusCode).toBe(400);
   });
 
   test('requires a served CEP and a service', async () => {
