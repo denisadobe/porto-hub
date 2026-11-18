@@ -1,0 +1,93 @@
+{
+  "definitions": [
+    {
+      "title": "Cards de serviços (Commerce)",
+      "id": "cards-product",
+      "model": "cards-product",
+      "filter": "cards-product",
+      "plugins": {
+        "da": {
+          "name": "cards-product",
+          "rows": 1,
+          "columns": 3
+        }
+      }
+    },
+    {
+      "title": "Card de serviço",
+      "id": "cards-product-item",
+      "model": "cards-product-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 3,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div:nth-child(1)>picture>img[src]"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div:nth-child(1)>picture>img[alt]"
+            },
+            {
+              "name": "text",
+              "selector": "div:nth-child(2)"
+            },
+            {
+              "name": "sku",
+              "selector": "div:nth-child(3)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cards-product",
+      "fields": []
+    },
+    {
+      "id": "cards-product-item",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Imagem",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Texto alternativo da imagem"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Conteúdo",
+          "value": "",
+          "description": "Na ordem: selo (opcional), categoria, título (H3), rótulo do preço, preço em negrito, parcelamento (opcional), benefício e o link \"Compre agora\"."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "sku",
+          "label": "SKU do produto no Commerce",
+          "description": "Com SKU, nome, preço, imagem e link vêm do Commerce no site publicado; o conteúdo acima fica como reserva."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cards-product",
+      "components": [
+        "cards-product-item"
+      ]
+    }
+  ]
+}

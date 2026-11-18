@@ -139,3 +139,9 @@
     padding: 32px;
   }
 }
+
+/* editor: a question just added is empty; keep it visible (and selectable) with a placeholder */
+.accordion-faq.accordion-faq-editor .accordion-faq-item-title:empty::before {
+  content: "Nova pergunta (preencha o texto)";
+  opacity: 0.6;
+}

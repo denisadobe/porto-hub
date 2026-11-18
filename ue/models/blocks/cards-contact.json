@@ -1,0 +1,61 @@
+{
+  "definitions": [
+    {
+      "title": "Cards de atendimento",
+      "id": "cards-contact",
+      "model": "cards-contact",
+      "filter": "cards-contact",
+      "plugins": {
+        "da": {
+          "name": "cards-contact",
+          "rows": 1,
+          "columns": 1
+        }
+      }
+    },
+    {
+      "title": "Card de atendimento",
+      "id": "cards-contact-item",
+      "model": "cards-contact-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "text",
+              "selector": "div:nth-child(1)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cards-contact",
+      "fields": []
+    },
+    {
+      "id": "cards-contact-item",
+      "fields": [
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Conteúdo",
+          "value": "",
+          "description": "Título (H3), texto e o link do botão."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cards-contact",
+      "components": [
+        "cards-contact-item"
+      ]
+    }
+  ]
+}

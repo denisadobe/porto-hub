@@ -341,3 +341,20 @@ main .cards-product .cards-product-cta a.button[aria-disabled="true"] {
     padding: 8px;
   }
 }
+
+/* editor only: the SKU field (cell 3) shown as a small label on the card */
+.cards-product .cards-product-sku {
+  order: 99;
+  margin: 0 16px 16px;
+  padding: 4px 8px;
+  border: 1px dashed var(--porto-blue-900);
+  border-radius: var(--radius-sm);
+  color: var(--porto-blue-900);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.cards-product .cards-product-sku::before {
+  content: attr(data-label) ": ";
+  font-weight: 700;
+}

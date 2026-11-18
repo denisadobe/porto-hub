@@ -1,0 +1,71 @@
+{
+  "definitions": [
+    {
+      "title": "Categorias (filtro dos cards)",
+      "id": "cards-category",
+      "model": "cards-category",
+      "filter": "cards-category",
+      "plugins": {
+        "da": {
+          "name": "cards-category",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Categoria",
+      "id": "cards-category-item",
+      "model": "cards-category-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "icon",
+              "selector": "div:nth-child(1)>picture>img[src]"
+            },
+            {
+              "name": "label",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cards-category",
+      "fields": []
+    },
+    {
+      "id": "cards-category-item",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "icon",
+          "label": "Ícone (SVG)",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "label",
+          "label": "Nome da categoria",
+          "description": "Também define o filtro: os cards cuja categoria tem este nome aparecem ao clicar. A primeira categoria mostra todos."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cards-category",
+      "components": [
+        "cards-category-item"
+      ]
+    }
+  ]
+}

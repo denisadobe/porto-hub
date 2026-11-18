@@ -1,0 +1,72 @@
+{
+  "definitions": [
+    {
+      "title": "Lista de links (expansível)",
+      "id": "accordion-link-list",
+      "model": "accordion-link-list",
+      "filter": "accordion-link-list",
+      "plugins": {
+        "da": {
+          "name": "accordion-link-list",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Grupo de links",
+      "id": "accordion-link-list-item",
+      "model": "accordion-link-list-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "title",
+              "selector": "div:nth-child(1)"
+            },
+            {
+              "name": "links",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "accordion-link-list",
+      "fields": []
+    },
+    {
+      "id": "accordion-link-list-item",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Título",
+          "required": true
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "links",
+          "label": "Links",
+          "value": "",
+          "description": "Lista de links (ficam em colunas no desktop)."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "accordion-link-list",
+      "components": [
+        "accordion-link-list-item"
+      ]
+    }
+  ]
+}

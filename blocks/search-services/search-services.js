@@ -7,6 +7,8 @@
  * dispatching a `services:search` event on document.
  */
 
+import { IS_UE, claimDecoration, moveInstrumentation } from '../../scripts/ue-utils.js';
+
 const DEFAULT_PLACEHOLDER = 'Encontre o serviço que precisa';
 
 function normalize(text) {
@@ -21,6 +23,7 @@ function normalize(text) {
 function readConfig(block) {
   let indexUrl;
   let placeholder;
+  let placeholderCell;
   [...block.querySelectorAll(':scope > div > div')].forEach((cell) => {
     const link = cell.querySelector('a[href]');
     const text = cell.textContent.trim();
@@ -30,9 +33,12 @@ function readConfig(block) {
       indexUrl = text;
     } else if (!placeholder && text) {
       placeholder = text;
+      placeholderCell = cell;
     }
   });
-  return { indexUrl, placeholder: placeholder || DEFAULT_PLACEHOLDER };
+  // editor: the (first) cell is the "placeholder" field, even while it is still empty
+  if (!placeholderCell) placeholderCell = block.querySelector(':scope > div > div[data-aue-prop]');
+  return { indexUrl, placeholder: placeholder || DEFAULT_PLACEHOLDER, placeholderCell };
 }
 
 let indexCache;
@@ -75,7 +81,8 @@ function renderIndexResults(results, list, query) {
 }
 
 export default function decorate(block) {
-  const { indexUrl, placeholder } = readConfig(block);
+  if (!claimDecoration(block)) return;
+  const { indexUrl, placeholder, placeholderCell } = readConfig(block);
 
   const form = document.createElement('form');
   form.className = 'search-services-box';
@@ -93,6 +100,9 @@ export default function decorate(block) {
   const labelText = document.createElement('span');
   labelText.className = 'search-services-placeholder';
   labelText.textContent = placeholder;
+  // the visible placeholder is the editor's "placeholder" text field
+  moveInstrumentation(placeholderCell, labelText);
+  if (IS_UE) block.classList.add('search-services-editor');
   label.append(input, labelText);
 
   const submit = document.createElement('button');

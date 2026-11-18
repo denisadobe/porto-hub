@@ -140,3 +140,9 @@
     gap: 128px;
   }
 }
+
+/* editor: the player must not swallow clicks, so the video cell (the "video" field) stays selectable */
+.columns-video.columns-video-editor .columns-video-embed iframe,
+.columns-video.columns-video-editor .columns-video-embed video {
+  pointer-events: none;
+}

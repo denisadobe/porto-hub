@@ -1,0 +1,60 @@
+[
+  {
+    "id": "main",
+    "components": [
+      "section"
+    ]
+  },
+  {
+    "id": "section",
+    "components": [
+      "text",
+      "image",
+      "fragment",
+      "carousel-hero-promo",
+      "search-services",
+      "cards-category",
+      "cards-product",
+      "columns-video",
+      "accordion-faq",
+      "cards-contact",
+      "accordion-link-list"
+    ]
+  },
+  {
+    "id": "accordion-faq",
+    "components": [
+      "accordion-faq-item"
+    ]
+  },
+  {
+    "id": "accordion-link-list",
+    "components": [
+      "accordion-link-list-item"
+    ]
+  },
+  {
+    "id": "cards-category",
+    "components": [
+      "cards-category-item"
+    ]
+  },
+  {
+    "id": "cards-contact",
+    "components": [
+      "cards-contact-item"
+    ]
+  },
+  {
+    "id": "cards-product",
+    "components": [
+      "cards-product-item"
+    ]
+  },
+  {
+    "id": "carousel-hero-promo",
+    "components": [
+      "carousel-hero-promo-slide"
+    ]
+  }
+]

@@ -14,4 +14,11 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `cards-category` (models in `ue/models/blocks/cards-category.json`, built into the root `component-*.json` by `npm run build:json`). Children: `cards-category-item`.
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Categoria | `icon` | Ícone (SVG) | reference | `div:nth-child(1)>picture>img[src]` |
+| Categoria | `label` | Nome da categoria | text | `div:nth-child(2)` |
+
+Each chip is a container item. The label is also the filter key, so keep it equal to the card category text.

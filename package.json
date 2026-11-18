@@ -12,7 +12,8 @@
     "install:dropins": "node build.mjs && node postinstall.js",
     "postinstall": "npm run install:dropins",
     "postupdate": "npm run install:dropins",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:json": "node ue/build-json.mjs"
   },
   "repository": {
     "type": "git",

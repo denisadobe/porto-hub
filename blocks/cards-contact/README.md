@@ -14,4 +14,10 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `cards-contact` (models in `ue/models/blocks/cards-contact.json`, built into the root `component-*.json` by `npm run build:json`). Children: `cards-contact-item`.
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Card de atendimento | `text` | Conteúdo | richtext | `div:nth-child(1)` |
+
+Each card is a container item.

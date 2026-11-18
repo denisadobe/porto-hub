@@ -14,4 +14,11 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `columns-video` (models in `ue/models/blocks/columns-video.json`, built into the root `component-*.json` by `npm run build:json`).
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Texto + vídeo | `text` | Texto | richtext | `div>div:nth-child(1)` |
+| Texto + vídeo | `video` | URL do vídeo | text | `div>div:nth-child(2)` |
+
+The video URL is edited as plain text; the player is not interactive in the editor so it doesn't steal clicks.

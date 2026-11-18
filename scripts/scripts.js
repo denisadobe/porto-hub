@@ -2,8 +2,10 @@ import {
   loadHeader,
   loadFooter,
   decorateIcons,
+  decorateBlock,
   decorateBlocks,
   decorateTemplateAndTheme,
+  loadBlock,
   waitForFirstImage,
   loadSection,
   loadSections,
@@ -19,9 +21,9 @@ import {
   applyTemplates,
   decorateLinks,
   loadErrorPage,
-  decorateSections,
   IS_DA,
 } from './commerce.js';
+import { IS_UE } from './ue-utils.js';
 
 /*
  * Trusted Types default policy.
@@ -188,15 +190,87 @@ function decorateButtons(main) {
 }
 
 /**
+ * Decorates all sections in a container element. Also understands the Universal Editor
+ * markup: on *.ue.da.live, default content arrives wrapped in instrumented div.richtext
+ * elements (one editable "Text" each). Such a wrapper becomes the default-content wrapper
+ * itself, so it keeps its instrumentation (and stays findable after an edit, see
+ * ue/scripts/ue.js) and default-content CSS still applies. Outside the editor the result is the
+ * same as aem.js.
+ * @param {Element} main The container element
+ */
+function decorateSections(main) {
+  main.querySelectorAll(':scope > div').forEach((section) => {
+    const wrappers = [];
+    let defaultContent = false;
+    [...section.children].forEach((e) => {
+      if (e.tagName === 'DIV' && e.classList.contains('richtext')) {
+        e.classList.remove('richtext');
+        e.classList.add('default-content-wrapper');
+        wrappers.push(e);
+        defaultContent = false;
+        return;
+      }
+      if (e.tagName === 'DIV' || !defaultContent) {
+        const wrapper = document.createElement('div');
+        wrappers.push(wrapper);
+        defaultContent = e.tagName !== 'DIV';
+        if (defaultContent) wrapper.classList.add('default-content-wrapper');
+      }
+      wrappers[wrappers.length - 1].append(e);
+    });
+    wrappers.forEach((wrapper) => section.append(wrapper));
+    section.classList.add('section');
+    section.dataset.sectionStatus = 'initialized';
+    section.style.display = 'none';
+  });
+}
+
+/**
+ * Universal Editor: aem.js wraps block cells whose first child is not a text element in a <p>,
+ * which also catches the instrumented div.richtext of a cell (<p><div>…</div></p>).
+ * Unwraps those paragraphs so blocks see the cell content and the editable keeps its place.
+ * @param {Element} main The main element
+ */
+function unwrapEditorCells(main) {
+  main.querySelectorAll('.block > div > div > p:first-child').forEach((p) => {
+    if (!p.querySelector(':scope > div')) return;
+    p.replaceWith(...p.childNodes);
+  });
+}
+
+/**
+ * Universal Editor: decorates one part of the page put back undecorated after an edit (a block
+ * or a default-content wrapper, see ue/scripts/ue.js), the way decorateMain does for the page.
+ * @param {Element} el The block or default-content wrapper, already in the page
+ * @returns {Promise} resolves once a block is loaded
+ */
+export async function decorateEditorContent(el) {
+  decorateLinks(el);
+  decorateIcons(el);
+  if (el.classList.contains('default-content-wrapper')) {
+    decorateButtons(el);
+    return;
+  }
+  decorateBlock(el);
+  unwrapEditorCells(el.parentElement);
+  decorateButtons(el);
+  await loadBlock(el);
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
 export function decorateMain(main) {
+  // editor: *.ue.da.live keeps the page metadata table (hidden) in the content; it is edited
+  // as page properties, so it must not be loaded as a block
+  if (IS_UE) main.querySelectorAll(':scope > div > div.metadata').forEach((meta) => meta.remove());
   decorateLinks(main);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  if (IS_UE) unwrapEditorCells(main);
   decorateButtons(main);
 }
 
@@ -268,6 +342,11 @@ async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+}
+
+// Universal Editor (Author Bus) support, loaded before the page decorates
+if (IS_UE) {
+  await import(`${window.hlx.codeBasePath}/ue/scripts/ue.js`).then(({ default: ue }) => ue());
 }
 
 loadPage();

@@ -20,4 +20,13 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `cards-product` (models in `ue/models/blocks/cards-product.json`, built into the root `component-*.json` by `npm run build:json`). Children: `cards-product-item`.
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Card de serviço | `image` | Imagem | reference | `div:nth-child(1)>picture>img[src]` |
+| Card de serviço | `imageAlt` | Texto alternativo da imagem | text | `div:nth-child(1)>picture>img[alt]` |
+| Card de serviço | `text` | Conteúdo | richtext | `div:nth-child(2)` |
+| Card de serviço | `sku` | SKU do produto no Commerce | text | `div:nth-child(3)` |
+
+Each card is a container item. In the editor the card shows the authored content (not the Commerce data) plus a dashed "Commerce · SKU" box with the SKU field; Commerce data is merged only on preview/live.

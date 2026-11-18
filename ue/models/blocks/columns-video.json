@@ -1,0 +1,48 @@
+{
+  "definitions": [
+    {
+      "title": "Texto + vídeo",
+      "id": "columns-video",
+      "model": "columns-video",
+      "plugins": {
+        "da": {
+          "name": "columns-video",
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "text",
+              "selector": "div>div:nth-child(1)"
+            },
+            {
+              "name": "video",
+              "selector": "div>div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "columns-video",
+      "fields": [
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Texto",
+          "value": ""
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "video",
+          "label": "URL do vídeo",
+          "description": "YouTube, Vimeo ou arquivo .mp4"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

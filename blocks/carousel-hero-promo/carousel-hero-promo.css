@@ -52,6 +52,32 @@
   object-position: 50% 0%;
 }
 
+/* art direction: desktop banner from 900px, mobile crop below (both pictures stay in the DOM) */
+.carousel-hero-promo .carousel-hero-promo-slide-image picture.carousel-hero-promo-image-desktop {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .carousel-hero-promo .carousel-hero-promo-slide-image picture.carousel-hero-promo-image-desktop {
+    display: block;
+  }
+
+  .carousel-hero-promo .carousel-hero-promo-slide-image picture.carousel-hero-promo-image-mobile {
+    display: none;
+  }
+
+  /* the wide banner is framed by its centre, as on the source */
+  .carousel-hero-promo .carousel-hero-promo-slide-image picture.carousel-hero-promo-image-desktop img {
+    object-position: 50% 50%;
+  }
+}
+
+/* editor: no autoplay progress (the slide being edited stays put) */
+.carousel-hero-promo.carousel-hero-promo-editor .carousel-hero-promo-progress {
+  width: 100%;
+  animation: none;
+}
+
 /* content covers the slide so the desktop disclaimer anchors to the slide */
 .carousel-hero-promo .carousel-hero-promo-slide-content {
   position: relative;

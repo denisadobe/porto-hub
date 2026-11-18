@@ -1,0 +1,279 @@
+[
+  {
+    "id": "page-metadata",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Título da página"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "description",
+        "label": "Descrição"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem de compartilhamento",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "robots",
+        "label": "Robots",
+        "description": "Controle de indexação, ex.: noindex, nofollow"
+      }
+    ]
+  },
+  {
+    "id": "image",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Imagem",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Texto alternativo"
+      }
+    ]
+  },
+  {
+    "id": "section",
+    "fields": [
+      {
+        "component": "multiselect",
+        "name": "style",
+        "label": "Estilo",
+        "options": [
+          {
+            "name": "Fundo cinza claro",
+            "value": "light"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "accordion-faq",
+    "fields": []
+  },
+  {
+    "id": "accordion-faq-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "question",
+        "label": "Pergunta",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "answer",
+        "label": "Resposta",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "accordion-link-list",
+    "fields": []
+  },
+  {
+    "id": "accordion-link-list-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Título",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "links",
+        "label": "Links",
+        "value": "",
+        "description": "Lista de links (ficam em colunas no desktop)."
+      }
+    ]
+  },
+  {
+    "id": "cards-category",
+    "fields": []
+  },
+  {
+    "id": "cards-category-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "icon",
+        "label": "Ícone (SVG)",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Nome da categoria",
+        "description": "Também define o filtro: os cards cuja categoria tem este nome aparecem ao clicar. A primeira categoria mostra todos."
+      }
+    ]
+  },
+  {
+    "id": "cards-contact",
+    "fields": []
+  },
+  {
+    "id": "cards-contact-item",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Conteúdo",
+        "value": "",
+        "description": "Título (H3), texto e o link do botão."
+      }
+    ]
+  },
+  {
+    "id": "cards-product",
+    "fields": []
+  },
+  {
+    "id": "cards-product-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Texto alternativo da imagem"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Conteúdo",
+        "value": "",
+        "description": "Na ordem: selo (opcional), categoria, título (H3), rótulo do preço, preço em negrito, parcelamento (opcional), benefício e o link \"Compre agora\"."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "sku",
+        "label": "SKU do produto no Commerce",
+        "description": "Com SKU, nome, preço, imagem e link vêm do Commerce no site publicado; o conteúdo acima fica como reserva."
+      }
+    ]
+  },
+  {
+    "id": "carousel-hero-promo",
+    "fields": []
+  },
+  {
+    "id": "carousel-hero-promo-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem desktop (1920×300)",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Texto alternativo da imagem desktop"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "imageMobile",
+        "label": "Imagem mobile (430×764)",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageMobileAlt",
+        "label": "Texto alternativo da imagem mobile"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Conteúdo",
+        "value": "",
+        "description": "Título (H2), subtítulo, link do botão ou cupom (texto + código) e texto legal."
+      }
+    ]
+  },
+  {
+    "id": "columns-video",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Texto",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "video",
+        "label": "URL do vídeo",
+        "description": "YouTube, Vimeo ou arquivo .mp4"
+      }
+    ]
+  },
+  {
+    "id": "fragment",
+    "fields": [
+      {
+        "component": "text",
+        "name": "urlText",
+        "label": "Texto do link do fragmento"
+      },
+      {
+        "component": "text",
+        "name": "url",
+        "label": "URL do fragmento",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "search-services",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "placeholder",
+        "label": "Texto do campo de busca",
+        "value": "Encontre o serviço que precisa"
+      }
+    ]
+  }
+]

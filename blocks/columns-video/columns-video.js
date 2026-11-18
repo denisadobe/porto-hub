@@ -5,6 +5,25 @@
  * embed loads on click; without one it loads when scrolled into view.
  */
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { IS_UE, claimDecoration, replacePicture } from '../../scripts/ue-utils.js';
+
+/*
+ * UE model columns-video: text (rich text, cell 1) and video (plain text URL, cell 2).
+ * The cells themselves are kept (they carry the editor fields); only their content is decorated.
+ * A cell holding just a video URL (link or plain text, as the editor's text field writes it)
+ * becomes the player.
+ */
+
+/** A plain-text video URL (the editor's text field) becomes a link the decorator understands. */
+function linkPlainUrl(col) {
+  if (col.querySelector('a[href]')) return;
+  const text = col.textContent.trim();
+  if (!/^https?:\/\/\S+$/.test(text)) return;
+  const a = document.createElement('a');
+  a.href = text;
+  a.textContent = text;
+  col.replaceChildren(a);
+}
 
 function getEmbed(href) {
   let url;
@@ -88,6 +107,8 @@ function decorateVideo(col, link, embed) {
 }
 
 export default function decorate(block) {
+  if (!claimDecoration(block)) return;
+  if (IS_UE) block.classList.add('columns-video-editor');
   const firstRow = block.firstElementChild;
   const cols = firstRow ? [...firstRow.children] : [];
   block.classList.add(`columns-video-${cols.length}-cols`);
@@ -95,6 +116,7 @@ export default function decorate(block) {
   [...block.children].forEach((row) => {
     row.classList.add('columns-video-row');
     [...row.children].forEach((col) => {
+      linkPlainUrl(col);
       const embedLink = [...col.querySelectorAll('a[href]')]
         .map((a) => ({ a, embed: getEmbed(a.href) }))
         .find((x) => x.embed);
@@ -111,6 +133,6 @@ export default function decorate(block) {
   block.querySelectorAll('picture > img').forEach((img) => {
     const url = new URL(img.src, window.location.href);
     if (url.origin !== window.location.origin || /\.svg$/i.test(url.pathname)) return;
-    img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
+    replacePicture(img.closest('picture'), createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
   });
 }

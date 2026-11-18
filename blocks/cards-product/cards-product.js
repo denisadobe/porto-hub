@@ -17,6 +17,9 @@
  */
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { CS_FETCH_GRAPHQL, getProductLink } from '../../scripts/commerce.js';
+import {
+  IS_UE, claimDecoration, emptyMediaSlot, isEmptyRow, moveInstrumentation, replacePicture,
+} from '../../scripts/ue-utils.js';
 
 const PRODUCTS_QUERY = `query CardsProduct($skus: [String]) {
   products(skus: $skus) {
@@ -249,26 +252,45 @@ function applyProduct(li, product) {
   }
 }
 
+/**
+ * Editor only: the SKU cell stays in the card as a small label (it is the "sku" field), so
+ * authors see which Commerce product a card is bound to and can edit it in place.
+ */
+function keepSkuCell(div, sku) {
+  div.className = 'cards-product-sku';
+  div.dataset.label = sku ? 'Commerce · SKU' : 'Commerce · SKU (vazio)';
+}
+
 export default async function decorate(block) {
+  if (!claimDecoration(block)) return;
   const ul = document.createElement('ul');
   ul.className = 'cards-product-list';
 
   [...block.children].forEach((row) => {
-    if (!row.textContent.trim() && !row.querySelector('picture')) return;
+    if (isEmptyRow(row)) return;
     const li = document.createElement('li');
+    moveInstrumentation(row, li);
     li.className = 'cards-product-card';
     while (row.firstElementChild) li.append(row.firstElementChild);
     let categories = [];
+    // editor: a card just added has no image yet, keep [image | text | sku] by position
+    const mediaSlot = emptyMediaSlot([...li.children]);
     [...li.children].forEach((div, i) => {
       // cell 3 (optional): Commerce SKU, plain text only
       const sku = div.textContent.trim().replace(/^sku:\s*/i, '');
       if (i >= 2 && !div.querySelector('picture, a, h1, h2, h3, h4, h5, h6') && /^[\w.-]+$/.test(sku)) {
         li.dataset.sku = sku;
-        div.remove();
+        if (IS_UE) keepSkuCell(div, sku);
+        else div.remove();
         return;
       }
       if (i >= 2 && !div.textContent.trim() && !div.querySelector('picture')) {
-        div.remove();
+        if (IS_UE) keepSkuCell(div, '');
+        else div.remove();
+        return;
+      }
+      if (div === mediaSlot) {
+        div.className = 'cards-product-card-image';
         return;
       }
       if (div.children.length === 1 && div.querySelector('picture') && !div.textContent.trim()) {
@@ -291,7 +313,7 @@ export default async function decorate(block) {
       img.decoding = 'async';
       return;
     }
-    img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
+    replacePicture(img.closest('picture'), createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
   });
 
   const count = document.createElement('p');
@@ -348,6 +370,9 @@ export default async function decorate(block) {
   apply();
 
   // Authored content renders first; live Commerce data is merged in when it arrives.
+  // Not in the editor: there the authored fields are what is edited (and saved), so they must
+  // not be replaced by catalog values; the SKU label shows which product a card is bound to.
+  if (IS_UE) return;
   const skus = [...new Set(cards.map((card) => card.dataset.sku).filter(Boolean))];
   if (!skus.length) return;
   block.setAttribute('aria-busy', 'true');

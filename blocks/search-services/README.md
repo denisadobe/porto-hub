@@ -14,4 +14,10 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `search-services` (models in `ue/models/blocks/search-services.json`, built into the root `component-*.json` by `npm run build:json`).
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Busca de serviços | `placeholder` | Texto do campo de busca | text | `div>div` |
+
+Click the field placeholder text on the page to edit it in place.

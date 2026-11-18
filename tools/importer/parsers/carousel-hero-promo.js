@@ -10,23 +10,24 @@ export default function parse(element, { document }) {
   const slides = element.querySelectorAll('.s-banner-hero__slider__item');
 
   slides.forEach((slide) => {
-    // Cell 1: background image only
+    // Cell 1: desktop banner image, then the mobile image (block model: image, imageMobile).
+    // The source picture holds the wide banner in <source media="(width >= 1025px)">
+    // (srcset, or data-srcset before hydration) and the tall mobile crop in <img>.
     const imageCell = [];
     const img = slide.querySelector('picture.s-banner-hero__banner__background img, .s-banner-hero__banner img');
-    // prefer the desktop rendition from <source media="(min-width...)"> when present
-    let src = img ? img.getAttribute('src') : '';
-    const desktopSource = [...slide.querySelectorAll('picture source[srcset]')]
-      .find((s) => /min-width/.test(s.getAttribute('media') || ''));
-    if (desktopSource) {
-      const first = desktopSource.getAttribute('srcset').split(',')[0].trim().split(/\s+/)[0];
-      if (first && !first.startsWith('data:')) src = first;
-    }
-    if (img && src && !src.startsWith('data:')) {
+    const firstUrl = (value) => (value || '').split(',')[0].trim().split(/\s+/)[0];
+    const desktopSource = [...slide.querySelectorAll('picture source')]
+      .map((s) => ({ media: s.getAttribute('media') || '', url: firstUrl(s.getAttribute('srcset') || s.getAttribute('data-srcset')) }))
+      .find((s) => /1025|min-width|>=/.test(s.media) && s.url && !s.url.startsWith('data:'));
+    const mobileSrc = img ? img.getAttribute('src') : '';
+    const alt = img ? img.getAttribute('alt') || '' : '';
+    [desktopSource?.url, mobileSrc].forEach((src) => {
+      if (!src || src.startsWith('data:')) return;
       const image = document.createElement('img');
       image.src = src;
-      image.alt = img.getAttribute('alt') || '';
+      image.alt = alt;
       imageCell.push(image);
-    }
+    });
 
     // Cell 2: text content
     const contentCell = [];

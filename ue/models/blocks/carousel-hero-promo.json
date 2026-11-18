@@ -1,0 +1,101 @@
+{
+  "definitions": [
+    {
+      "title": "Banner promocional (carrossel)",
+      "id": "carousel-hero-promo",
+      "model": "carousel-hero-promo",
+      "filter": "carousel-hero-promo",
+      "plugins": {
+        "da": {
+          "unsafeHTML": "<div class=\"carousel-hero-promo\"><div><div><picture><img loading=\"lazy\"></picture><picture><img loading=\"lazy\"></picture></div><div><h2>Título do banner</h2><p>Texto de apoio.</p><p><a href=\"/\">Chamada principal</a></p></div></div></div>"
+        }
+      }
+    },
+    {
+      "title": "Slide",
+      "id": "carousel-hero-promo-slide",
+      "model": "carousel-hero-promo-slide",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div:nth-child(1)>picture:nth-of-type(1)>img[src]"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div:nth-child(1)>picture:nth-of-type(1)>img[alt]"
+            },
+            {
+              "name": "imageMobile",
+              "selector": "div:nth-child(1)>picture:nth-of-type(2)>img[src]"
+            },
+            {
+              "name": "imageMobileAlt",
+              "selector": "div:nth-child(1)>picture:nth-of-type(2)>img[alt]"
+            },
+            {
+              "name": "text",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "carousel-hero-promo",
+      "fields": []
+    },
+    {
+      "id": "carousel-hero-promo-slide",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Imagem desktop (1920×300)",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Texto alternativo da imagem desktop"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "imageMobile",
+          "label": "Imagem mobile (430×764)",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageMobileAlt",
+          "label": "Texto alternativo da imagem mobile"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Conteúdo",
+          "value": "",
+          "description": "Título (H2), subtítulo, link do botão ou cupom (texto + código) e texto legal."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "carousel-hero-promo",
+      "components": [
+        "carousel-hero-promo-slide"
+      ]
+    }
+  ]
+}

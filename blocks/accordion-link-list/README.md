@@ -14,4 +14,11 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `accordion-link-list` (models in `ue/models/blocks/accordion-link-list.json`, built into the root `component-*.json` by `npm run build:json`). Children: `accordion-link-list-item`.
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Grupo de links | `title` | Título | text | `div:nth-child(1)` |
+| Grupo de links | `links` | Links | richtext | `div:nth-child(2)` |
+
+Each group is a container item. In the editor all groups are open so the links can be edited.

@@ -1,0 +1,37 @@
+{
+  "definitions": [
+    {
+      "title": "Busca de serviços",
+      "id": "search-services",
+      "model": "search-services",
+      "plugins": {
+        "da": {
+          "name": "search-services",
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "placeholder",
+              "selector": "div>div"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "search-services",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "placeholder",
+          "label": "Texto do campo de busca",
+          "value": "Encontre o serviço que precisa"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

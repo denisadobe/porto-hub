@@ -113,3 +113,13 @@
     column-count: 4;
   }
 }
+
+/* editor: an item just added is empty; keep it visible (and selectable) with placeholders */
+.accordion-link-list.accordion-link-list-editor .accordion-link-list-title:empty::before {
+  content: "Novo grupo de links (preencha o título)";
+  opacity: 0.6;
+}
+
+.accordion-link-list.accordion-link-list-editor .accordion-link-list-body:empty {
+  min-height: 40px;
+}

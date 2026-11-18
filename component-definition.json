@@ -1,0 +1,343 @@
+{
+  "groups": [
+    {
+      "title": "Conteúdo",
+      "id": "default",
+      "components": [
+        {
+          "title": "Texto",
+          "id": "text",
+          "model": "text",
+          "plugins": {
+            "da": {
+              "name": "text",
+              "type": "text"
+            }
+          }
+        },
+        {
+          "title": "Imagem",
+          "id": "image",
+          "model": "image",
+          "plugins": {
+            "da": {
+              "name": "image",
+              "type": "image",
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "img[alt]"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Seções",
+      "id": "sections",
+      "components": [
+        {
+          "title": "Seção",
+          "id": "section",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div></div>"
+            }
+          },
+          "filter": "section",
+          "model": "section"
+        }
+      ]
+    },
+    {
+      "title": "Blocos",
+      "id": "blocks",
+      "components": [
+        {
+          "title": "Perguntas frequentes",
+          "id": "accordion-faq",
+          "model": "accordion-faq",
+          "filter": "accordion-faq",
+          "plugins": {
+            "da": {
+              "name": "accordion-faq",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Pergunta",
+          "id": "accordion-faq-item",
+          "model": "accordion-faq-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "question",
+                  "selector": "div:nth-child(1)"
+                },
+                {
+                  "name": "answer",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Lista de links (expansível)",
+          "id": "accordion-link-list",
+          "model": "accordion-link-list",
+          "filter": "accordion-link-list",
+          "plugins": {
+            "da": {
+              "name": "accordion-link-list",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Grupo de links",
+          "id": "accordion-link-list-item",
+          "model": "accordion-link-list-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1)"
+                },
+                {
+                  "name": "links",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Categorias (filtro dos cards)",
+          "id": "cards-category",
+          "model": "cards-category",
+          "filter": "cards-category",
+          "plugins": {
+            "da": {
+              "name": "cards-category",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Categoria",
+          "id": "cards-category-item",
+          "model": "cards-category-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "icon",
+                  "selector": "div:nth-child(1)>picture>img[src]"
+                },
+                {
+                  "name": "label",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Cards de atendimento",
+          "id": "cards-contact",
+          "model": "cards-contact",
+          "filter": "cards-contact",
+          "plugins": {
+            "da": {
+              "name": "cards-contact",
+              "rows": 1,
+              "columns": 1
+            }
+          }
+        },
+        {
+          "title": "Card de atendimento",
+          "id": "cards-contact-item",
+          "model": "cards-contact-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(1)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Cards de serviços (Commerce)",
+          "id": "cards-product",
+          "model": "cards-product",
+          "filter": "cards-product",
+          "plugins": {
+            "da": {
+              "name": "cards-product",
+              "rows": 1,
+              "columns": 3
+            }
+          }
+        },
+        {
+          "title": "Card de serviço",
+          "id": "cards-product-item",
+          "model": "cards-product-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 3,
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:nth-child(1)>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:nth-child(1)>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(2)"
+                },
+                {
+                  "name": "sku",
+                  "selector": "div:nth-child(3)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Banner promocional (carrossel)",
+          "id": "carousel-hero-promo",
+          "model": "carousel-hero-promo",
+          "filter": "carousel-hero-promo",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"carousel-hero-promo\"><div><div><picture><img loading=\"lazy\"></picture><picture><img loading=\"lazy\"></picture></div><div><h2>Título do banner</h2><p>Texto de apoio.</p><p><a href=\"/\">Chamada principal</a></p></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Slide",
+          "id": "carousel-hero-promo-slide",
+          "model": "carousel-hero-promo-slide",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:nth-child(1)>picture:nth-of-type(1)>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:nth-child(1)>picture:nth-of-type(1)>img[alt]"
+                },
+                {
+                  "name": "imageMobile",
+                  "selector": "div:nth-child(1)>picture:nth-of-type(2)>img[src]"
+                },
+                {
+                  "name": "imageMobileAlt",
+                  "selector": "div:nth-child(1)>picture:nth-of-type(2)>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Texto + vídeo",
+          "id": "columns-video",
+          "model": "columns-video",
+          "plugins": {
+            "da": {
+              "name": "columns-video",
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "text",
+                  "selector": "div>div:nth-child(1)"
+                },
+                {
+                  "name": "video",
+                  "selector": "div>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Fragmento",
+          "id": "fragment",
+          "model": "fragment",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"fragment\"><div><div><p><a href=\"\">Fragment URL</a></p></div></div></div>",
+              "fields": [
+                {
+                  "name": "url",
+                  "selector": "div>div>p>a[href]"
+                },
+                {
+                  "name": "urlText",
+                  "selector": "div>div>p>a"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Busca de serviços",
+          "id": "search-services",
+          "model": "search-services",
+          "plugins": {
+            "da": {
+              "name": "search-services",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "placeholder",
+                  "selector": "div>div"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

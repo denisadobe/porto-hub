@@ -14,4 +14,11 @@ No variations.
 
 ## Universal Editor fields
 
-N/A (Document Authoring project)
+Component `accordion-faq` (models in `ue/models/blocks/accordion-faq.json`, built into the root `component-*.json` by `npm run build:json`). Children: `accordion-faq-item`.
+
+| Component | Field | Label | Type | Cell selector |
+| --- | --- | --- | --- | --- |
+| Pergunta | `question` | Pergunta | text | `div:nth-child(1)` |
+| Pergunta | `answer` | Resposta | richtext | `div:nth-child(2)` |
+
+Each question is a container item. In the editor the FAQ JSON-LD is not generated and empty items show a placeholder.

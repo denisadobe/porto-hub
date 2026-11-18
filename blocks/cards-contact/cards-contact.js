@@ -4,13 +4,20 @@
  * An optional image cell is supported.
  */
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import {
+  claimDecoration, isEmptyRow, moveInstrumentation, replacePicture,
+} from '../../scripts/ue-utils.js';
+
+/* UE model cards-contact-item: text (rich text, the single cell: title, text, CTA link). */
 
 export default function decorate(block) {
+  if (!claimDecoration(block)) return;
   const ul = document.createElement('ul');
   ul.className = 'cards-contact-list';
   [...block.children].forEach((row) => {
-    if (!row.textContent.trim() && !row.querySelector('picture')) return;
+    if (isEmptyRow(row)) return;
     const li = document.createElement('li');
+    moveInstrumentation(row, li);
     li.className = 'cards-contact-card';
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
@@ -40,7 +47,7 @@ export default function decorate(block) {
   ul.querySelectorAll('picture > img').forEach((img) => {
     const url = new URL(img.src, window.location.href);
     if (url.origin !== window.location.origin || /\.svg$/i.test(url.pathname)) return;
-    img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
+    replacePicture(img.closest('picture'), createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]));
   });
 
   block.replaceChildren(ul);

@@ -4,8 +4,13 @@
  * #<category-slug>). The first chip is the default "all" filter (Destaques).
  * Selecting a chip dispatches `services:category` on document; cards-product
  * listens and filters its cards. The URL hash (#ar-condicionado) selects a chip.
+ * UE model cards-category-item: icon (image, cell 1) and label (plain text, cell 2); the
+ * category is the label slug (or the #hash of a link in the label cell).
  */
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import {
+  claimDecoration, isEmptyRow, moveInstrumentation, replacePicture,
+} from '../../scripts/ue-utils.js';
 
 function slugify(text) {
   return (text || '')
@@ -26,6 +31,7 @@ function readHash() {
 }
 
 export default function decorate(block) {
+  if (!claimDecoration(block)) return;
   const ul = document.createElement('ul');
   ul.className = 'cards-category-list';
   // a labelled list of toggle buttons (aria-pressed); a toolbar role would
@@ -33,10 +39,13 @@ export default function decorate(block) {
   ul.setAttribute('aria-label', 'Categorias de serviços');
 
   [...block.children].forEach((row, idx) => {
+    if (isEmptyRow(row)) return;
     const cells = [...row.children];
-    const iconCell = cells.find((c) => c.querySelector('picture, img, .icon') && !c.textContent.trim());
-    const labelCell = cells.find((c) => c !== iconCell && c.textContent.trim());
-    if (!labelCell && !iconCell) return;
+    let iconCell = cells.find((c) => c.querySelector('picture, img, .icon') && !c.textContent.trim());
+    let labelCell = cells.find((c) => c !== iconCell && c.textContent.trim());
+    // editor: an item just added is still empty, keep [icon | label] by position
+    if (!iconCell && !labelCell && cells.length > 1) [iconCell, labelCell] = cells;
+    else if (!labelCell && cells.length > 1) labelCell = cells.find((c) => c !== iconCell);
 
     const link = labelCell?.querySelector('a[href]');
     const label = (labelCell?.textContent || '').trim();
@@ -48,6 +57,7 @@ export default function decorate(block) {
     if (!slug) slug = slugify(label);
 
     const li = document.createElement('li');
+    moveInstrumentation(row, li);
     li.className = 'cards-category-item';
     const button = document.createElement('button');
     button.type = 'button';
@@ -68,6 +78,8 @@ export default function decorate(block) {
     const text = document.createElement('span');
     text.className = 'cards-category-label';
     text.textContent = label;
+    // the label is the editor's "label" text field
+    moveInstrumentation(labelCell, text);
     button.append(text);
 
     li.append(button);
@@ -77,7 +89,7 @@ export default function decorate(block) {
   ul.querySelectorAll('picture > img').forEach((img) => {
     const url = new URL(img.src, window.location.href);
     if (url.origin !== window.location.origin || /\.svg$/i.test(url.pathname)) return;
-    img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '96' }]));
+    replacePicture(img.closest('picture'), createOptimizedPicture(img.src, img.alt, false, [{ width: '96' }]));
   });
 
   block.replaceChildren(ul);

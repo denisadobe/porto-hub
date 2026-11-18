@@ -186,3 +186,9 @@
     color: var(--porto-blue-650);
   }
 }
+
+/* editor: the placeholder is the editable "placeholder" field, so it must be selectable */
+/* stylelint-disable-next-line no-descending-specificity -- only sets pointer-events */
+.search-services.search-services-editor .search-services-placeholder {
+  pointer-events: auto;
+}

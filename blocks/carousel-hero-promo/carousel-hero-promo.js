@@ -1,4 +1,16 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import {
+  IS_UE, claimDecoration, isEmptyRow, moveInstrumentation, replacePicture,
+} from '../../scripts/ue-utils.js';
+
+/*
+ * Carousel (hero promo)
+ * One row per slide (UE model: carousel-hero-promo-slide):
+ *   cell 1: desktop banner picture, then an optional mobile picture (fields image, imageMobile)
+ *   cell 2: title heading, subtitle, CTA link or coupon ("Cupom: \`CODE\`"), fine print (text)
+ * Both pictures stay in the page (each keeps its editor instrumentation); CSS shows the desktop
+ * one from 900px and the mobile one below.
+ */
 
 let instanceCount = 0;
 
@@ -25,13 +37,15 @@ function optimizeImages(container, eager) {
   container.querySelectorAll('picture > img').forEach((img) => {
     const url = new URL(img.src, window.location.href);
     if (url.origin !== window.location.origin || /\.svg$/i.test(url.pathname)) return;
-    if (img.closest('picture').querySelector('source[media]')) return; // keep art direction
-    img.closest('picture').replaceWith(createOptimizedPicture(
+    const picture = img.closest('picture');
+    const optimized = createOptimizedPicture(
       img.src,
       img.alt,
       eager,
       [{ media: '(min-width: 900px)', width: '2000' }, { width: '900' }],
-    ));
+    );
+    optimized.className = picture.className;
+    replacePicture(picture, optimized);
   });
 }
 
@@ -112,25 +126,14 @@ function decorateContent(content) {
 }
 
 /**
- * Optional art direction: when the image cell holds two images, the first is
- * the mobile crop and the second the wide desktop banner.
+ * Art direction: with two pictures, the first is the wide desktop banner and the second the
+ * mobile crop. Both stay in the cell (editor fields image / imageMobile); CSS picks one.
  */
-function mergeArtDirection(imageCell) {
+function markArtDirection(imageCell) {
   const pictures = [...imageCell.querySelectorAll('picture')];
   if (pictures.length < 2) return;
-  const [mobile, desktop] = pictures;
-  const desktopImg = desktop.querySelector('img');
-  if (!desktopImg) return;
-  const source = document.createElement('source');
-  source.media = '(width >= 900px)';
-  source.srcset = desktopImg.currentSrc || desktopImg.src;
-  mobile.prepend(source);
-  pictures.slice(1).forEach((pic) => {
-    const parent = pic.parentElement;
-    pic.remove();
-    if (parent && parent !== imageCell && parent.tagName === 'P' && !parent.children.length
-      && !parent.textContent.trim()) parent.remove();
-  });
+  pictures[0].classList.add('carousel-hero-promo-image-desktop');
+  pictures[1].classList.add('carousel-hero-promo-image-mobile');
 }
 
 /**
@@ -153,6 +156,7 @@ function prioritizeImages(container, isFirst) {
 function createSlide(row, idx, id) {
   // slides are groups (aria-roledescription="slide"), so they can't be list items
   const slide = document.createElement('div');
+  moveInstrumentation(row, slide);
   slide.className = 'carousel-hero-promo-slide';
   slide.dataset.slideIndex = idx;
   slide.id = `carousel-hero-promo-${id}-slide-${idx}`;
@@ -161,18 +165,22 @@ function createSlide(row, idx, id) {
 
   const cells = [...row.children];
   let imageCell = cells.find((c) => c.querySelector('picture') && !c.querySelector('h1, h2, h3, h4, h5, h6, p a'));
+  // positional fallback (a slide just added in the editor, no picture yet): [image | content]
   if (!imageCell && cells.length > 1) [imageCell] = cells;
   const contentCells = cells.filter((c) => c !== imageCell);
 
   if (imageCell) {
+    // the cell element itself is kept, so the instrumented pictures stay where the editor put them
     imageCell.className = 'carousel-hero-promo-slide-image';
-    mergeArtDirection(imageCell);
+    markArtDirection(imageCell);
     optimizeImages(imageCell, idx === 0);
     prioritizeImages(imageCell, idx === 0);
     slide.append(imageCell);
   }
   const content = document.createElement('div');
   content.className = 'carousel-hero-promo-slide-content';
+  // the text cell is the editor's "text" field: its instrumentation moves to the content box
+  if (contentCells.length === 1) moveInstrumentation(contentCells[0], content);
   contentCells.forEach((cell) => content.append(...cell.childNodes));
   decorateContent(content);
   slide.append(content);
@@ -183,9 +191,10 @@ function createSlide(row, idx, id) {
 }
 
 export default function decorate(block) {
+  if (!claimDecoration(block)) return;
   instanceCount += 1;
   const id = instanceCount;
-  const rows = [...block.children].filter((row) => row.textContent.trim() || row.querySelector('picture'));
+  const rows = [...block.children].filter((row) => !isEmptyRow(row, 'picture, img'));
   block.id = block.id || `carousel-hero-promo-${id}`;
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'carousel');
@@ -200,6 +209,7 @@ export default function decorate(block) {
   viewport.append(track);
   block.replaceChildren(viewport);
 
+  if (IS_UE) block.classList.add('carousel-hero-promo-editor');
   if (slides.length < 2) {
     block.classList.add('carousel-hero-promo-single');
     return;
@@ -284,7 +294,13 @@ export default function decorate(block) {
     else if (btn.closest('.carousel-hero-promo-indicator')) show(parseInt(btn.dataset.slideIndex, 10));
   });
 
-  progress.addEventListener('animationend', () => show(current + 1));
+  // no autoplay in the editor: the slide being edited must not move away
+  if (!IS_UE) progress.addEventListener('animationend', () => show(current + 1));
+  // editor: selecting a slide in the content tree brings it into view (ue/scripts/ue.js)
+  block.addEventListener('carousel-hero-promo:show', (e) => {
+    const index = Number(e.detail?.index);
+    if (Number.isInteger(index) && index >= 0 && index < total) show(index);
+  });
 
   const observer = new IntersectionObserver((entries) => {
     if (Date.now() < ignoreObserverUntil) return;
