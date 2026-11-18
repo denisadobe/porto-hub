@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const memoryStore = require('./memory-store');
 const { setStore, putJson } = require('../actions/lib/store');
 const { KEYS } = require('../actions/lib/config');
@@ -12,13 +13,13 @@ const ORIGIN = 'https://main--porto-hub--denisadobe.aem.live';
 const get = (params) => ({ __ow_method: 'get', __ow_headers: { origin: ORIGIN }, ...params });
 const post = (params) => ({ __ow_method: 'post', __ow_headers: { origin: ORIGIN }, ...params });
 const CLIENT = '11111111-2222-4333-8444-555555555555';
-const newClient = () => require('crypto').randomUUID();
+const newClient = () => crypto.randomUUID();
 
 const VIACEP = {
   '01310100': {
     cep: '01310-100', logradouro: 'Avenida Paulista', bairro: 'Bela Vista', localidade: 'São Paulo', uf: 'SP',
   },
-  '69005010': {
+  69005010: {
     cep: '69005-010', logradouro: 'Rua Barroso', bairro: 'Centro', localidade: 'Manaus', uf: 'AM',
   },
 };
@@ -79,7 +80,9 @@ describe('coverage', () => {
       ],
     });
     expect((await coverage.main(get({ cep: '01310100' }))).body.served).toBe(false);
-    VIACEP['13010000'] = { logradouro: 'Rua X', bairro: 'Centro', localidade: 'Campinas', uf: 'SP' };
+    VIACEP['13010000'] = {
+      logradouro: 'Rua X', bairro: 'Centro', localidade: 'Campinas', uf: 'SP',
+    };
     expect((await coverage.main(get({ cep: '13010000', sku: 'ADB220' }))).body.served).toBe(true);
     expect((await coverage.main(get({ cep: '13010000', sku: 'ADB201' }))).body.reason).toBe('service');
   });

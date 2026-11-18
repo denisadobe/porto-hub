@@ -38,3 +38,17 @@ Address lookup: [ViaCEP](https://viacep.com.br) (real). Coverage still answers i
 ## Tests
 
 `npm test` (Jest, in-memory store and mocked ViaCEP), also run by the workflow before deploying.
+
+## Commerce webhooks (order placement)
+
+These are raw-http web actions. Every call is checked: the `x-adobe-commerce-webhook-signature` header must match the public key in `commerce-webhook-public-key.pem`. The key comes from Stores > Configuration > Adobe Services > Webhooks. It is public by design, so it is committed. Without the key, every call is rejected.
+
+| Action | Webhook method (System > Webhooks > Webhooks Subscriptions) | Type | Required | What it does |
+| --- | --- | --- | --- | --- |
+| `webhook-order-validate` | `observer.sales_order_place_before` | before | yes | Blocks the order unless every item has a live `porto_reservation_id` for the same SKU and the shipping CEP matches. It returns `op: exception`, and its message is shown at checkout. A valid hold gets 10 more minutes. |
+| `webhook-order-placed` | `observer.sales_order_place_after` | after | no | Confirms the reservation with the order number. The booking is kept until 30 days after the visit. |
+| `webhook-order-cancel` | `observer.order_cancel_after` | after | no | Releases the booked shift. |
+
+**Hook fields:** none, so Commerce sends the full payload. The parser finds the order items (objects with a `sku`) and reads the `porto_reservation_id` custom attribute, whatever its shape. Commerce copies the cart item custom attributes set by the storefront to the order items.
+
+**`REQUIRE_BOOKING`:** blocks items without a booking. Default: `true`.

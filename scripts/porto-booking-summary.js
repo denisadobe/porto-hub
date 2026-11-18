@@ -4,6 +4,7 @@
  * with the remaining hold time. Hidden when the cart no longer has the booked service.
  */
 import { events } from '@dropins/tools/event-bus.js';
+import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import { loadCSS } from './aem.js';
 
 const SESSION_KEY = 'porto-booking-session';
@@ -65,13 +66,45 @@ export default function renderBookingSummary(block) {
     hold.textContent = `Horário reservado por mais ${m}:${s}. Ele é confirmado quando você finaliza o pedido.`;
     return true;
   };
-  if (tick()) {
-    const timer = setInterval(() => { if (!tick()) clearInterval(timer); }, 1000);
-  }
+  let timer;
+  if (tick()) timer = setInterval(() => { if (!tick()) clearInterval(timer); }, 1000);
 
-  // hide when the booked service is no longer in the cart
+  // hide when the booked service is no longer in the cart (until the order is placed)
+  let orderPlaced = false;
   events.on('cart/data', (cart) => {
+    if (orderPlaced) return;
     const items = cart?.items || [];
     box.hidden = !items.some((i) => i.sku === sku || i.topLevelSku === sku);
   }, { eager: true });
+
+  // order placed: Commerce calls App Builder (order webhook), which confirms the booking.
+  // Poll the reservation for a few seconds to show the confirmation, then forget the session.
+  events.on('order/placed', async (order) => {
+    orderPlaced = true;
+    clearInterval(timer);
+    box.hidden = false;
+    box.classList.add('is-placed');
+    box.querySelector('.porto-booking-summary__title').textContent = 'Agendamento do serviço';
+    change.remove();
+    hold.dataset.kind = '';
+    hold.textContent = 'Confirmando seu agendamento…';
+    sessionStorage.removeItem(SESSION_KEY);
+    const base = getConfigValue('porto-booking')?.api;
+    let confirmed = null;
+    for (let i = 0; base && i < 8 && !confirmed; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const r = await fetch(`${base}/reservation?id=${reservation.id}`).then((res) => (res.ok ? res.json() : null)).catch(() => null);
+      if (r?.status === 'confirmed') confirmed = r;
+      // eslint-disable-next-line no-await-in-loop
+      else await new Promise((resolve) => { setTimeout(resolve, 1500); });
+    }
+    const number = confirmed?.orderId || order?.number;
+    if (confirmed) {
+      box.classList.add('is-confirmed');
+      box.querySelector('.porto-booking-summary__title').textContent = 'Agendamento confirmado';
+      hold.textContent = `Pedido ${number}. Um técnico Porto vai até você na data e turno acima.`;
+    } else {
+      hold.textContent = `Pedido ${number || ''} recebido. A confirmação do agendamento chega por e-mail.`;
+    }
+  });
 }

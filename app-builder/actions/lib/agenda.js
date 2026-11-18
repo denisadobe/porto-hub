@@ -177,7 +177,8 @@ async function reserveSlot({
 }) {
   const clientId = validateClientId(rawClientId);
   if ((await activeHolds(clientId, replaces)).length >= MAX_ACTIVE_HOLDS) {
-    throw new HttpError(429, 'too_many_holds', `Você já tem ${MAX_ACTIVE_HOLDS} horários reservados. Conclua a compra ou aguarde alguns minutos para reservar outro.`);
+    throw new HttpError(429, 'too_many_holds', `Você já tem ${MAX_ACTIVE_HOLDS} horários reservados. `
+      + 'Conclua a compra ou aguarde alguns minutos para reservar outro.');
   }
   const agenda = await loadAgenda();
   if (!DATE_RE.test(String(date || '')) || !bookableDates(agenda, now).includes(date)) {
@@ -221,6 +222,20 @@ async function reserveSlot({
   throw new HttpError(409, 'slot_full', 'Esse horário acabou de ser preenchido. Escolha outro turno ou data.');
 }
 
+/** Gives a held reservation more time (checkout in progress), never less than it already has. */
+async function extendHold(id, { seconds = 600, now = new Date() } = {}) {
+  const r = await getReservation(id);
+  if (!r || r.status !== 'held') return r;
+  const left = (Date.parse(r.expiresAt) - now.getTime()) / 1000;
+  if (left >= seconds) return r;
+  const expiresAt = new Date(now.getTime() + seconds * 1000).toISOString();
+  const updated = { ...r, expiresAt };
+  await putJson(r.slotKey, publicReservation(updated), { ttl: seconds });
+  await putJson(`rsv.${id}`, updated, { ttl: seconds });
+  if (r.clientId) await putJson(`hold.${r.clientId}.${id}`, { id }, { ttl: seconds });
+  return updated;
+}
+
 /** Turns a held reservation into a confirmed booking (used when the order is placed). */
 async function confirmReservation(id, { orderId, now = new Date() } = {}) {
   const r = await getReservation(id);
@@ -249,6 +264,7 @@ module.exports = {
   releaseReservation,
   getReservation,
   confirmReservation,
+  extendHold,
   publicReservation,
   validateReservationId,
 };

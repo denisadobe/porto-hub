@@ -56,3 +56,40 @@ application:
             annotations:
               require-adobe-auth: false
               final: true
+          # Commerce webhooks (System > Webhooks > Webhooks Subscriptions). raw-http keeps the
+          # original body for the signature check; the public key comes from
+          # Stores > Configuration > Adobe Services > Webhooks (commerce-webhook-public-key.pem).
+          webhook-order-validate:
+            function: actions/webhook-order-validate/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+              COMMERCE_WEBHOOK_PUBLIC_KEY: $COMMERCE_WEBHOOK_PUBLIC_KEY
+              REQUIRE_BOOKING: 'true'
+            annotations:
+              require-adobe-auth: false
+              raw-http: true
+              final: true
+          webhook-order-placed:
+            function: actions/webhook-order-placed/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+              COMMERCE_WEBHOOK_PUBLIC_KEY: $COMMERCE_WEBHOOK_PUBLIC_KEY
+            annotations:
+              require-adobe-auth: false
+              raw-http: true
+              final: true
+          webhook-order-cancel:
+            function: actions/webhook-order-cancel/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+              COMMERCE_WEBHOOK_PUBLIC_KEY: $COMMERCE_WEBHOOK_PUBLIC_KEY
+            annotations:
+              require-adobe-auth: false
+              raw-http: true
+              final: true

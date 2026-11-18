@@ -55,3 +55,14 @@
   color: var(--porto-blue-900);
   font-weight: 700;
 }
+
+.porto-booking-summary.is-confirmed {
+  border-color: #b7e4c7;
+  border-left-color: #0b7a3b;
+  background: #effaf3;
+}
+
+.porto-booking-summary.is-confirmed .porto-booking-summary__title {
+  color: #0b7a3b;
+  font-weight: 700;
+}

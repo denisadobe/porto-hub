@@ -87,6 +87,14 @@ jobs:
           aio telemetry off || true
           aio app use "$RUNNER_TEMP/workspace.json" --no-input
           rm -f "$RUNNER_TEMP/workspace.json"
+          # Commerce webhook public key (public by design, committed in the repo), one line with \n
+          if [ -f commerce-webhook-public-key.pem ]; then
+            printf 'COMMERCE_WEBHOOK_PUBLIC_KEY="%s"\n' "$(awk 'NF {printf "%s\\n", $0}' commerce-webhook-public-key.pem)" >> .env
+            echo "Commerce webhook public key configured."
+          else
+            echo "::warning::No commerce-webhook-public-key.pem: order webhooks will reject every call until it is added."
+            echo 'COMMERCE_WEBHOOK_PUBLIC_KEY=""' >> .env
+          fi
 
       - name: Build
         if: env.HAS_WORKSPACE == 'true'
