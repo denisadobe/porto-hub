@@ -17,6 +17,37 @@ function readBooking() {
   }
 }
 
+// set by renderBookingSummary: turns the box into a warning (the checkout hides thrown errors)
+let showProblem = () => {};
+
+const EXPIRED = 'O horário reservado expirou. Volte à página do serviço e escolha o horário novamente.';
+const BLOCKED = 'Não foi possível confirmar o agendamento deste pedido. Volte à página do serviço, '
+  + 'confira o CEP e escolha o horário novamente.';
+
+/**
+ * Checked right before placing the order: a friendly message when the hold is gone. The order
+ * webhook (App Builder) enforces the same rule on the server.
+ */
+export async function isBookingValid() {
+  const { reservation } = readBooking();
+  const base = getConfigValue('porto-booking')?.api;
+  if (!reservation?.id || !base) return true;
+  const res = await fetch(`${base}/reservation?id=${reservation.id}`).catch(() => null);
+  if (res?.status === 404) {
+    showProblem(EXPIRED);
+    return false;
+  }
+  return true;
+}
+
+/** Commerce replaces webhook messages with a generic server error; explain it for services. */
+export function explainOrderError(error) {
+  const generic = /server error stopped your order/i.test(error?.message || '');
+  if (!generic || !readBooking().reservation) return error;
+  showProblem(BLOCKED);
+  return new Error(BLOCKED);
+}
+
 function longDay(date) {
   return new Intl.DateTimeFormat('pt-BR', {
     timeZone: 'UTC', weekday: 'long', day: '2-digit', month: 'long',
@@ -68,6 +99,15 @@ export default function renderBookingSummary(block) {
   };
   let timer;
   if (tick()) timer = setInterval(() => { if (!tick()) clearInterval(timer); }, 1000);
+
+  showProblem = (text) => {
+    clearInterval(timer);
+    box.hidden = false;
+    hold.textContent = text;
+    hold.dataset.kind = 'warning';
+    box.classList.add('is-problem');
+    box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
 
   // hide when the booked service is no longer in the cart (until the order is placed)
   let orderPlaced = false;

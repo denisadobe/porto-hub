@@ -75,7 +75,10 @@ import '../../scripts/initializers/payment-services.js';
 
 // Checkout success block import and CSS preload
 import { renderCheckoutSuccess, preloadCheckoutSuccess } from '../commerce-checkout-success/commerce-checkout-success.js';
-import renderBookingSummary from '../../scripts/porto-booking-summary.js';
+import renderBookingSummary, {
+  isBookingValid,
+  explainOrderError,
+} from '../../scripts/porto-booking-summary.js';
 
 preloadCheckoutSuccess();
 
@@ -174,10 +177,13 @@ export default async function decorate(block) {
           return;
         }
       }
+      // Porto Serviço: the service booking must still be held (also enforced by the order
+      // webhook). If not, keep the checkout as is; the booking box explains what to do.
+      if (!(await isBookingValid())) return;
       await orderApi.placeOrder(cartId);
     } catch (error) {
       console.error(error);
-      throw error;
+      throw explainOrderError(error);
     } finally {
       removeOverlaySpinner(loaderRef, $loader, $loaderStatus);
     }
