@@ -9,6 +9,8 @@ import { useIms } from "@adobe/aio-commerce-lib-admin-ui/web";
 function runtimeBase() {
   const params = new URLSearchParams(window.location.search);
   if (params.get("api")) return params.get("api");
+  // the static host also serves the web actions: same origin, no CORS
+  if (window.location.hostname.endsWith(".adobeio-static.net")) return `${window.location.origin}/api/v1/web`;
   const [namespace] = window.location.hostname.split(".");
   return `https://${namespace}.adobeioruntime.net/api/v1/web`;
 }
