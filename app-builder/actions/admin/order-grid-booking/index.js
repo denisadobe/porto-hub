@@ -32,4 +32,3 @@ exports.main = async (params) => {
   }));
   return okGridResponse(data, { porto_booking: '', porto_booking_status: '' });
 };
-

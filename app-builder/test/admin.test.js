@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const memoryStore = require('./memory-store');
 const { setStore, getJson } = require('../actions/lib/store');
 const agenda = require('../actions/lib/agenda');
@@ -6,7 +7,6 @@ const bookings = require('../actions/admin/bookings/index');
 const grid = require('../actions/admin/order-grid-booking/index');
 const placed = require('../actions/webhook-order-placed/index');
 const cancel = require('../actions/webhook-order-cancel/index');
-const crypto = require('crypto');
 
 const ORG = 'ABC123@AdobeOrg';
 const CLIENT = '11111111-2222-4333-8444-555555555555';
@@ -69,7 +69,10 @@ describe('admin config', () => {
     expect((await config.main(admin('get'))).body.coverage.regions).toHaveLength(1);
 
     expect((await config.main(admin('post', { coverage: { regions: [] } }))).statusCode).toBe(422);
-    const agendaRes = await config.main(admin('post', { agenda: { holdMinutes: 20, shifts: [{ id: 'manha', label: 'Manhã', start: '08:00', end: '12:00', capacity: 2, weekdays: [1, 2] }] } }));
+    const shifts = [{
+      id: 'manha', label: 'Manhã', start: '08:00', end: '12:00', capacity: 2, weekdays: [1, 2],
+    }];
+    const agendaRes = await config.main(admin('post', { agenda: { holdMinutes: 20, shifts } }));
     expect(agendaRes.body.agenda).toMatchObject({ holdMinutes: 20 });
     expect((await config.main(admin('post', { agenda: { shifts: [] } }))).statusCode).toBe(422);
   });

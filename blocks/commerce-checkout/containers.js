@@ -82,6 +82,8 @@ import {
   SHIPPING_ADDRESS_DATA_KEY,
   SHIPPING_FORM_NAME,
 } from './constants.js';
+// Porto Serviço demo payments (simulated card + Pix)
+import { portoPaymentMethods } from './porto-payments.js';
 
 /**
  * Container IDs for registry management
@@ -370,6 +372,7 @@ export const renderPaymentMethods = async (container) => renderContainer(
         [PaymentMethodCode.FASTLANE]: {
           enabled: false,
         },
+        ...portoPaymentMethods(),
       },
     },
   })(container),

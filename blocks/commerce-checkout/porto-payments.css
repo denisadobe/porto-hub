@@ -1,0 +1,203 @@
+/* Porto Serviço demo payments (porto-payments.js). 1rem = 10px on this site. */
+.porto-pay {
+  display: grid;
+  gap: 12px;
+  margin: 8px 0 4px;
+  color: var(--porto-neutral-text);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.porto-pay .porto-pay__demo {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--porto-blue-100);
+  color: var(--porto-neutral-heading);
+  font-size: 13px;
+}
+
+.porto-pay .porto-pay__field {
+  display: grid;
+  gap: 4px;
+}
+
+.porto-pay label {
+  color: var(--porto-neutral-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.porto-pay input,
+.porto-pay select {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: 8px;
+  background: var(--porto-neutral-0);
+  color: var(--porto-neutral-text);
+  font: inherit;
+  font-size: 16px;
+}
+
+.porto-pay input:focus-visible,
+.porto-pay select:focus-visible {
+  outline: 2px solid var(--porto-blue-900);
+  outline-offset: 1px;
+  border-color: var(--porto-blue-900);
+}
+
+.porto-pay .porto-pay__hint {
+  margin: 0;
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+}
+
+.porto-pay .is-invalid input {
+  border-color: #b3261e;
+}
+
+.porto-pay .is-invalid .porto-pay__hint {
+  color: #b3261e;
+}
+
+.porto-pay .porto-pay__number {
+  position: relative;
+}
+
+.porto-pay .porto-pay__brand {
+  position: absolute;
+  top: 34px;
+  right: 12px;
+  color: var(--porto-blue-900);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.porto-pay .porto-pay__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.porto-pay--pix ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.porto-pay .porto-pay__pix-title {
+  margin: 0;
+  color: var(--porto-neutral-heading);
+  font-weight: 700;
+}
+
+/* result box above the order confirmation */
+.porto-pay-result {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border: 1px solid var(--porto-blue-200);
+  border-left: 4px solid var(--porto-blue-900);
+  border-radius: 8px;
+  background: var(--porto-neutral-0);
+  font-family: var(--body-font-family);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.porto-pay-result.is-paid {
+  border-color: #b7e4c7;
+  border-left-color: #0b7a3b;
+}
+
+.porto-pay-result p {
+  margin: 0 0 8px;
+}
+
+.porto-pay-result .porto-pay__result-title {
+  color: var(--porto-neutral-heading);
+  font-family: var(--heading-font-family);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.porto-pay-result .porto-pay__pix-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 8px;
+}
+
+.porto-pay-result .porto-pay__qr {
+  width: 200px;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid var(--porto-neutral-200);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.porto-pay-result .porto-pay__qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.porto-pay-result .porto-pay__qr.is-paid {
+  opacity: 0.35;
+}
+
+.porto-pay-result label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--porto-neutral-heading);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.porto-pay-result .porto-pay__code {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--porto-neutral-300);
+  border-radius: 8px;
+  background: var(--porto-neutral-100);
+  font-family: monospace;
+  font-size: 12px;
+}
+
+.porto-pay-result .porto-pay__copy {
+  margin: 8px 0;
+  min-height: 44px;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--porto-blue-900);
+  color: var(--porto-neutral-0);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.porto-pay-result .porto-pay__status {
+  font-weight: 600;
+}
+
+.porto-pay-result.is-paid .porto-pay__status {
+  color: #0b7a3b;
+}
+
+.porto-pay-result .porto-pay__demo {
+  color: var(--porto-neutral-600);
+  font-size: 12px;
+}
+
+@media (min-width: 600px) {
+  .porto-pay-result .porto-pay__pix-grid {
+    grid-template-columns: 200px 1fr;
+  }
+}

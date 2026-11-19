@@ -75,6 +75,7 @@ import '../../scripts/initializers/payment-services.js';
 
 // Checkout success block import and CSS preload
 import { renderCheckoutSuccess, preloadCheckoutSuccess } from '../commerce-checkout-success/commerce-checkout-success.js';
+import { prepareCardPayment, renderPaymentResult } from './porto-payments.js';
 import renderBookingSummary, {
   isBookingValid,
   explainOrderError,
@@ -97,6 +98,7 @@ export default async function decorate(block) {
   const cartData = events.lastPayload('cart/initialized');
   redirectToCartIfEmpty(cartData);
   renderBookingSummary(block);
+  renderPaymentResult(block);
 
   // Container and component references
   let shippingForm;
@@ -180,6 +182,8 @@ export default async function decorate(block) {
       // Porto Serviço: the service booking must still be held (also enforced by the order
       // webhook). If not, keep the checkout as is; the booking box explains what to do.
       if (!(await isBookingValid())) return;
+      // Porto Serviço simulated card: record the masked summary (brand, last 4, installments)
+      if (!(await prepareCardPayment(code))) return;
       await orderApi.placeOrder(cartId);
     } catch (error) {
       console.error(error);

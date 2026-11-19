@@ -56,6 +56,25 @@ application:
             annotations:
               require-adobe-auth: false
               final: true
+          # Simulated Pix PSP (demo): charge with a real-format BR Code + automatic "payment"
+          pix-charge:
+            function: actions/pix-charge/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
+          pix-status:
+            function: actions/pix-status/index.js
+            web: 'yes'
+            runtime: nodejs:22
+            inputs:
+              LOG_LEVEL: info
+            annotations:
+              require-adobe-auth: false
+              final: true
           # Commerce webhooks (System > Webhooks > Webhooks Subscriptions). raw-http keeps the
           # original body for the signature check; the public key comes from
           # Stores > Configuration > Adobe Services > Webhooks (commerce-webhook-public-key.pem).

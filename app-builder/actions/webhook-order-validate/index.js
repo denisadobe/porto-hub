@@ -39,7 +39,11 @@ exports.main = async (params) => {
     const orderNumber = orderNumberOf(payload);
     console.info('webhook-order-validate', JSON.stringify({ orderNumber, postcode, bookings }));
     await record('webhook-order-validate', {
-      signature: 'ok', eventName: payload.eventName, shape: shape(payload), bookings: bookings.length, withReservation: bookings.filter((b) => b.reservationId).length,
+      signature: 'ok',
+      eventName: payload.eventName,
+      shape: shape(payload),
+      bookings: bookings.length,
+      withReservation: bookings.filter((b) => b.reservationId).length,
     });
     if (!bookings.length) return success();
     const requireBooking = String(params.REQUIRE_BOOKING ?? 'true') !== 'false';
