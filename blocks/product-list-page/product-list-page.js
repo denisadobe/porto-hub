@@ -162,15 +162,41 @@ export default async function decorate(block) {
           anchorWrapper.href = getProductLink(product.urlKey, product.sku);
           anchorWrapper.setAttribute('aria-label', product.name || product.sku);
 
-          tryRenderAemAssetsImage(ctx, {
-            alias: product.sku,
-            imageProps: defaultImageProps,
-            wrapper: anchorWrapper,
-            params: {
-              width: defaultImageProps.width,
-              height: defaultImageProps.height,
-            },
-          });
+          // The search results grid sends height NaN, and the Commerce image service answers
+          // "?height=NaN" with a 3px placeholder (colored squares). Commerce catalog images are
+          // rendered here with width-only URLs (aspect ratio kept); AEM Assets images keep using
+          // the assets helper.
+          const size = (v) => (Number.isFinite(Number(v)) && Number(v) > 0 ? Number(v) : undefined);
+          const width = size(defaultImageProps.width) || 400;
+          const height = size(defaultImageProps.height);
+          const src = defaultImageProps.src || '';
+          if (/\/adobe\/assets\//.test(src)) {
+            tryRenderAemAssetsImage(ctx, {
+              alias: product.sku,
+              imageProps: { ...defaultImageProps, width, height },
+              wrapper: anchorWrapper,
+              params: { width, ...(height ? { height } : {}) },
+            });
+            return;
+          }
+          if (!src) return;
+          const sized = (w) => {
+            const u = new URL(src.startsWith('//') ? `https:${src}` : src, window.location.href);
+            u.searchParams.delete('height');
+            u.searchParams.set('width', w);
+            return u.href;
+          };
+          const img = document.createElement('img');
+          img.className = 'dropin-image dropin-image--loaded';
+          img.src = sized(width);
+          img.srcset = [width / 2, width, width * 2].map((w) => `${sized(Math.round(w))} ${Math.round(w)}w`).join(', ');
+          img.sizes = '(min-width: 900px) 25vw, 50vw';
+          img.alt = defaultImageProps.alt || product.name || '';
+          img.loading = defaultImageProps.loading || 'lazy';
+          img.width = width;
+          if (height) img.height = height;
+          anchorWrapper.append(img);
+          ctx.replaceWith(anchorWrapper);
         },
         ProductActions: (ctx) => {
           const actionsWrapper = document.createElement('div');
