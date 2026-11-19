@@ -292,7 +292,7 @@ function showCard(box, order) {
   box.classList.add('is-paid');
   box.replaceChildren(
     el('p', { className: 'porto-pay__result-title', text: 'Pagamento aprovado (simulado)' }),
-    el('p', { text: `Cartão de crédito${payment?.name ? ` – ${payment.name}` : ''}. Nenhum valor foi cobrado.` }),
+    el('p', { text: `${payment?.name || 'Cartão de crédito'} aprovado. Ambiente de demonstração: nenhum valor foi cobrado.` }),
   );
 }
 
