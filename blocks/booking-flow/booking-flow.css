@@ -1,11 +1,15 @@
 /*
- * booking-flow: service picker + shared booking flow (styles/service-booking.css).
- * Mobile: compact service cards stacked above the flow.
- * 600px+: service cards in a grid, flow centered with a readable width.
- * 1024px+: two columns, services on the left and the flow on the right.
+ * booking-flow: service showcase + shared booking flow (styles/service-booking.css).
+ * The layout follows the number of authored services (booking-flow--count-*):
+ * - 1: featured product card; on desktop it sits beside the flow.
+ * - 2 / 3: equal product cards in one row, flow centered below.
+ * - more: card grid (desktop) / swipeable row (mobile), flow centered below.
  */
 .booking-flow {
+  --booking-flow-width: 760px;
+
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   font-family: var(--body-font-family);
   color: var(--porto-neutral-text);
@@ -19,61 +23,58 @@
   font-weight: 500;
 }
 
+/* ---------- service cards ---------- */
 .booking-flow .booking-flow-services {
   display: grid;
-  gap: 10px;
+  gap: 16px;
 }
 
-/* compact horizontal card (image on the left) */
 .booking-flow .booking-flow-service {
   position: relative;
-  display: grid;
-  grid-template-columns: 88px 1fr;
-  grid-template-rows: auto 1fr;
-  column-gap: 12px;
-  align-content: start;
-  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--porto-neutral-200);
-  border-radius: 12px;
+  border-radius: 16px;
   background: var(--porto-neutral-0);
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
 
-.booking-flow .booking-flow-service:hover {
+/* hover, pointer and selected state only when there is a choice to make */
+.booking-flow:not(.booking-flow--single) .booking-flow-service {
+  cursor: pointer;
+}
+
+.booking-flow:not(.booking-flow--single) .booking-flow-service:hover {
   border-color: var(--porto-blue-400);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
 }
 
 .booking-flow .booking-flow-service input {
   position: absolute;
   inset: 0;
+  z-index: 1;
   margin: 0;
   opacity: 0;
   cursor: inherit;
 }
 
-.booking-flow .booking-flow-service:has(input:checked) {
+.booking-flow:not(.booking-flow--single) .booking-flow-service:has(input:checked) {
   border-color: var(--porto-blue-900);
-  box-shadow: inset 0 0 0 1px var(--porto-blue-900);
-  background: var(--porto-blue-100);
+  box-shadow: inset 0 0 0 1px var(--porto-blue-900), 0 8px 24px rgb(0 61 180 / 12%);
 }
 
-.booking-flow .booking-flow-service:has(input:focus-visible) {
+.booking-flow:not(.booking-flow--single) .booking-flow-service:has(input:focus-visible) {
   outline: 2px solid var(--porto-blue-900);
-  outline-offset: 2px;
-}
-
-.booking-flow .booking-flow-service.is-missing {
-  border-style: dashed;
-  opacity: 0.6;
-  cursor: not-allowed;
+  outline-offset: 3px;
 }
 
 .booking-flow .booking-flow-service-media {
   display: block;
-  grid-row: 1 / span 2;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
   background: var(--porto-neutral-100);
 }
 
@@ -82,25 +83,124 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.booking-flow:not(.booking-flow--single) .booking-flow-service:hover .booking-flow-service-media img {
+  transform: scale(1.04);
+}
+
+.booking-flow .booking-flow-service-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 16px 4px;
 }
 
 .booking-flow .booking-flow-service-name {
-  padding: 14px 12px 0 0;
   color: var(--porto-neutral-heading);
   font-family: var(--heading-font-family);
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   line-height: 1.3;
 }
 
 .booking-flow .booking-flow-service-price {
-  padding: 2px 12px 12px 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
   color: var(--porto-neutral-600);
   font-size: 13px;
 }
 
+.booking-flow .booking-flow-service-value {
+  color: var(--porto-blue-900);
+  font-family: var(--heading-font-family);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* "Escolher" / "Selecionado" footer */
+.booking-flow .booking-flow-service-state {
+  display: block;
+  margin: 12px 16px 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--porto-blue-900);
+  border-radius: 999px;
+  color: var(--porto-blue-900);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.booking-flow .booking-flow-service-chosen,
+.booking-flow .booking-flow-service:has(input:checked) .booking-flow-service-choose {
+  display: none;
+}
+
+.booking-flow .booking-flow-service:has(input:checked) .booking-flow-service-chosen {
+  display: inline;
+}
+
+.booking-flow .booking-flow-service:has(input:checked) .booking-flow-service-state {
+  background: var(--porto-blue-900);
+  color: var(--porto-neutral-0);
+}
+
+/* round check badge on the image */
+.booking-flow .booking-flow-service-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--porto-neutral-0);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 85%);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 20%);
+}
+
+.booking-flow .booking-flow-service:has(input:checked) .booking-flow-service-check {
+  background: var(--porto-blue-900);
+}
+
+.booking-flow .booking-flow-service:has(input:checked) .booking-flow-service-check::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  width: 7px;
+  height: 12px;
+  border: solid var(--porto-neutral-0);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.booking-flow .booking-flow-service.is-missing {
+  border-style: dashed;
+  box-shadow: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.booking-flow.booking-flow-editor .booking-flow-service.is-missing {
+  cursor: pointer;
+}
+
+/* one service: nothing to choose, the card is a product summary */
+.booking-flow.booking-flow--single .booking-flow-service-body {
+  padding-bottom: 16px;
+}
+
+/* ---------- flow ---------- */
 .booking-flow .booking-flow-flow {
+  width: 100%;
   min-width: 0;
+  max-width: var(--booking-flow-width);
+  justify-self: center;
 }
 
 .booking-flow .booking-flow-flow .service-booking {
@@ -117,105 +217,164 @@
   max-width: 480px;
 }
 
-/* editor: empty or unknown SKUs stay visible and selectable */
-.booking-flow.booking-flow-editor .booking-flow-service.is-missing {
-  cursor: pointer;
+/* ---------- mobile ---------- */
+@media (max-width: 599px) {
+  /* one service: compact horizontal summary */
+  .booking-flow.booking-flow--single .booking-flow-service {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+  }
+
+  .booking-flow.booking-flow--single .booking-flow-service-media {
+    aspect-ratio: auto;
+    min-height: 112px;
+  }
+
+  /* two or more: swipeable row, next card peeking */
+  .booking-flow:not(.booking-flow--single) .booking-flow-services {
+    grid-auto-columns: minmax(220px, 78%);
+    grid-auto-flow: column;
+    margin-inline: -20px;
+    padding: 4px 20px 12px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 20px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .booking-flow:not(.booking-flow--single) .booking-flow-service {
+    scroll-snap-align: start;
+  }
+
+  .booking-flow .booking-flow-service-value {
+    font-size: 22px;
+  }
 }
 
-/* a single service: no picker, the flow opens directly */
-.booking-flow.booking-flow--single .booking-flow-title,
-.booking-flow.booking-flow--single .booking-flow-services {
-  display: none;
-}
-
+/* ---------- tablet and up ---------- */
 @media (min-width: 600px) {
+  .booking-flow {
+    gap: 20px;
+  }
+
+  .booking-flow .booking-flow-title {
+    justify-self: center;
+    width: 100%;
+    font-size: 24px;
+    text-align: center;
+  }
+
   .booking-flow .booking-flow-services {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    width: 100%;
+    justify-self: center;
   }
 
-  .booking-flow .booking-flow-service {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-    row-gap: 4px;
-    padding: 0 0 14px;
+  .booking-flow.booking-flow--count-2 .booking-flow-services {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: var(--booking-flow-width);
   }
 
-  .booking-flow .booking-flow-service-media {
-    grid-row: auto;
+  .booking-flow.booking-flow--count-3 .booking-flow-services {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1040px;
+  }
+
+  /* more than 3: rows of 3 (tablet) or 4 (desktop); an incomplete last row is centered */
+  .booking-flow.booking-flow--count-many .booking-flow-services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1120px;
+  }
+
+  .booking-flow.booking-flow--count-many .booking-flow-service {
+    flex: 0 0 calc((100% - 32px) / 3);
+  }
+
+  /* one service, tablet: horizontal summary above the flow */
+  .booking-flow.booking-flow--single .booking-flow-title,
+  .booking-flow.booking-flow--single .booking-flow-services {
+    max-width: var(--booking-flow-width);
+  }
+
+  .booking-flow.booking-flow--single .booking-flow-service {
+    display: grid;
+    grid-template-columns: minmax(180px, 38%) 1fr;
+  }
+
+  .booking-flow.booking-flow--single .booking-flow-service-media {
     aspect-ratio: 4 / 3;
   }
 
-  .booking-flow .booking-flow-service-name {
-    padding: 8px 14px 0;
+  .booking-flow.booking-flow--single .booking-flow-service-body {
+    justify-content: center;
+    padding: 24px;
   }
 
-  .booking-flow .booking-flow-service-price {
-    padding: 0 14px;
+  .booking-flow.booking-flow--single .booking-flow-service-name {
+    font-size: 22px;
   }
 
-  .booking-flow .booking-flow-flow {
-    width: 100%;
-    max-width: 720px;
-    justify-self: center;
+  .booking-flow.booking-flow--single .booking-flow-service-price {
+    margin-top: 0;
   }
 }
 
+/* three across is tight on small tablets: smaller type */
+@media (min-width: 600px) and (max-width: 899px) {
+  .booking-flow.booking-flow--count-3 .booking-flow-service-name {
+    font-size: 16px;
+  }
+
+  .booking-flow.booking-flow--count-3 .booking-flow-service-value {
+    font-size: 20px;
+  }
+}
+
+/* ---------- desktop ---------- */
 @media (min-width: 1024px) {
-  /* two columns: services (left) | flow (right) */
-  .booking-flow {
-    grid-template-columns: minmax(260px, 340px) minmax(0, 680px);
+  .booking-flow.booking-flow--count-many .booking-flow-service {
+    flex-basis: calc((100% - 48px) / 4);
+  }
+
+  /* one service beside the flow */
+  .booking-flow.booking-flow--single {
+    grid-template-columns: minmax(300px, 380px) minmax(0, 680px);
     grid-template-rows: auto 1fr;
     gap: 12px 32px;
     justify-content: center;
     align-items: start;
   }
 
-  .booking-flow .booking-flow-title {
+  .booking-flow.booking-flow--single .booking-flow-title {
     grid-column: 1;
     grid-row: 1;
+    text-align: left;
   }
 
-  .booking-flow .booking-flow-services {
+  .booking-flow.booking-flow--single .booking-flow-services {
+    position: sticky;
+    top: 24px;
     grid-column: 1;
     grid-row: 2;
-    grid-template-columns: 1fr;
-    gap: 10px;
   }
 
-  .booking-flow .booking-flow-flow {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    max-width: none;
+  .booking-flow.booking-flow--single .booking-flow-service {
+    display: flex;
   }
 
-  /* back to compact horizontal cards in the side column */
-  .booking-flow .booking-flow-service {
-    grid-template-columns: 88px 1fr;
-    grid-template-rows: auto 1fr;
-    row-gap: 0;
-    padding: 0;
+  .booking-flow.booking-flow--single .booking-flow-service-body {
+    padding: 20px;
   }
 
-  .booking-flow .booking-flow-service-media {
-    grid-row: 1 / span 2;
-    aspect-ratio: 1;
-  }
-
-  .booking-flow .booking-flow-service-name {
-    padding: 14px 12px 0 0;
-  }
-
-  .booking-flow .booking-flow-service-price {
-    padding: 2px 12px 12px 0;
-  }
-
-  .booking-flow.booking-flow--single {
-    grid-template-columns: minmax(0, 720px);
+  .booking-flow.booking-flow--single .booking-flow-service-price {
+    margin-top: 4px;
   }
 
   .booking-flow.booking-flow--single .booking-flow-flow {
-    grid-column: 1;
-    grid-row: auto;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    max-width: none;
   }
 }

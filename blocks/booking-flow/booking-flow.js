@@ -38,7 +38,7 @@ function priceOf(p) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: amount.currency || 'BRL' }).format(amount.value);
 }
 
-function imageOf(p, width = 320) {
+function imageOf(p, width = 640) {
   const url = p?.images?.[0]?.url;
   if (!url) return '';
   const u = new URL(url.startsWith('//') ? `https:${url}` : url, window.location.href);
@@ -64,9 +64,10 @@ export default async function decorate(block) {
   list.setAttribute('role', 'radiogroup');
   list.setAttribute('aria-label', 'Escolha o serviço');
 
+  const single = items.length === 1;
   const heading = document.createElement('p');
   heading.className = 'booking-flow-title';
-  heading.textContent = 'Escolha o serviço';
+  heading.textContent = single ? 'Seu serviço' : 'Escolha o serviço';
 
   const flow = document.createElement('div');
   flow.className = 'booking-flow-flow';
@@ -104,25 +105,56 @@ export default async function decorate(block) {
       image.src = img;
       image.alt = '';
       image.loading = 'lazy';
-      image.width = 320;
-      image.height = 240;
+      image.width = 640;
+      image.height = 480;
       media.append(image);
     }
+
+    const body = document.createElement('span');
+    body.className = 'booking-flow-service-body';
     const name = document.createElement('span');
     name.className = 'booking-flow-service-name';
     name.textContent = item.label || product?.name || item.sku || 'Novo serviço (informe o SKU)';
     const price = document.createElement('span');
     price.className = 'booking-flow-service-price';
-    price.textContent = product ? `A partir de ${priceOf(product)}` : (item.sku && `SKU ${item.sku} não encontrado no Commerce`);
+    const amount = product ? priceOf(product) : '';
+    if (amount) {
+      const from = document.createElement('span');
+      from.className = 'booking-flow-service-from';
+      from.textContent = 'A partir de';
+      const value = document.createElement('strong');
+      value.className = 'booking-flow-service-value';
+      value.textContent = amount;
+      price.append(from, value);
+    } else if (!product && item.sku) {
+      price.textContent = `SKU ${item.sku} não encontrado no Commerce`;
+    }
+    body.append(name, price);
 
-    card.append(input, media, name, price);
+    card.append(input, media, body);
+
+    // with a choice to make: "Escolher" / "Selecionado" footer and a check badge
+    // (visual only: the radio input carries the state for assistive technology)
+    if (!single) {
+      const state = document.createElement('span');
+      state.className = 'booking-flow-service-state';
+      state.setAttribute('aria-hidden', 'true');
+      state.innerHTML = '<span class="booking-flow-service-choose">Escolher</span><span class="booking-flow-service-chosen">Selecionado</span>';
+      const check = document.createElement('span');
+      check.className = 'booking-flow-service-check';
+      check.setAttribute('aria-hidden', 'true');
+      card.append(state, check);
+    }
     list.append(card);
   });
 
   block.replaceChildren(heading, list, flow);
   if (IS_UE) block.classList.add('booking-flow-editor');
+  // layout depends on how many services are authored: 1, 2, 3 or more
+  const count = items.length;
+  block.classList.add(`booking-flow--count-${count > 3 ? 'many' : count}`);
+  if (single) block.classList.add('booking-flow--single');
 
   const first = items.find((i) => products.has(i.sku));
   if (first) select(first);
-  if (items.length === 1) block.classList.add('booking-flow--single');
 }

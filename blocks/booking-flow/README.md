@@ -6,7 +6,7 @@ Sell a few services directly on any page (for example a partner landing page): t
 
 Model: `standalone`
 
-One row per service. Cell 1: the Commerce SKU (e.g. `ADB201`). Cell 2 (optional): the name to show instead of the catalog name. Name, image and price come from Commerce; services whose SKU is not in the catalog are shown disabled. With a single row, the picker is hidden and the flow opens for that service.
+One row per service. Cell 1: the Commerce SKU (e.g. `ADB201`). Cell 2 (optional): the name to show instead of the catalog name. Name, image and price come from Commerce; services whose SKU is not in the catalog are shown disabled. The layout follows the number of rows: one service is shown as a product summary (beside the flow on desktop); two or three appear as equal cards in one row above the flow; more than three wrap into rows of four (desktop) or three (tablet). On mobile, two or more services become a swipeable row.
 
 | booking-flow | |
 | --- | --- |
