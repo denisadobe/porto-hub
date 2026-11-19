@@ -3,7 +3,9 @@ import { events } from '@dropins/tools/event-bus.js';
 
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { checkIsAuthenticated, fetchPlaceholders, rootLink } from '../../scripts/commerce.js';
+import {
+  checkIsAuthenticated, fetchPlaceholders, getProductLink, rootLink,
+} from '../../scripts/commerce.js';
 
 import renderSellerAssistedBuyingBanner from './renderSellerAssistedBuyingBanner.js';
 
@@ -24,6 +26,8 @@ let idCounter = 0;
 const uid = (prefix) => { idCounter += 1; return `${prefix}-${idCounter}`; };
 
 const CHEVRON = '<svg viewBox="0 0 12 6" width="12" height="6" aria-hidden="true" focusable="false"><path d="M1 .5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SEARCH = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>';
+const USER = '<svg viewBox="0 0 24 24" width="24" height="24" focusable="false"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 const CART = '<svg viewBox="0 0 28 28" width="28" height="28" aria-hidden="true" focusable="false"><path d="M2 4h3.6l3 13.2a1.6 1.6 0 0 0 1.6 1.3h11.6a1.6 1.6 0 0 0 1.6-1.2L26 8.5H7.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="23" r="1.8" fill="currentColor"/><circle cx="21" cy="23" r="1.8" fill="currentColor"/></svg>';
 
 /** Fetches the nav fragment: /content first (local preview), then the site root (DA/EDS). */
@@ -263,6 +267,113 @@ function buildMiniCart(tools) {
   return { close: () => toggle(false) };
 }
 
+/**
+ * Live Search (Adobe Commerce, product-discovery drop-in): magnifier button + panel with a
+ * search field and instant results (popover scope). Enter opens the full results page.
+ */
+function buildSearch(tools) {
+  const wrapper = document.createRange().createContextualFragment(`
+    <div class="search-wrapper nav-tools-wrapper">
+      <button type="button" class="nav-cart-button nav-search-button" aria-label="Buscar" aria-haspopup="dialog" aria-expanded="false" aria-controls="search-panel">${SEARCH}</button>
+      <div class="nav-search-panel nav-tools-panel" id="search-panel" role="dialog" aria-label="Buscar no catálogo">
+        <form class="nav-search-form" role="search">
+          <label class="nav-search-label" for="nav-search-input">Buscar no catálogo</label>
+          <input id="nav-search-input" name="search" type="search" autocomplete="off" placeholder="Busque serviços e produtos">
+        </form>
+        <p class="nav-search-hint">Digite pelo menos 3 letras.</p>
+        <div class="nav-search-results" hidden></div>
+      </div>
+    </div>`);
+  tools.prepend(wrapper);
+  const panel = tools.querySelector('.nav-search-panel');
+  const button = tools.querySelector('.nav-search-button');
+  const form = panel.querySelector('form');
+  const input = panel.querySelector('input');
+  const hint = panel.querySelector('.nav-search-hint');
+  const results = panel.querySelector('.nav-search-results');
+  const pageSize = 4;
+  const resultsUrl = (q) => `${rootLink('/search')}${q ? `?q=${encodeURIComponent(q)}` : ''}`;
+
+  let searchFn;
+  let loading;
+  const load = () => {
+    loading = loading || (async () => {
+      await import('../../scripts/initializers/search.js');
+      const [{ search }, { render }, { SearchResults }] = await Promise.all([
+        import('@dropins/storefront-product-discovery/api.js'),
+        import('@dropins/storefront-product-discovery/render.js'),
+        import('@dropins/storefront-product-discovery/containers/SearchResults.js'),
+      ]);
+      searchFn = search;
+      await render.render(SearchResults, {
+        skeletonCount: pageSize,
+        scope: 'popover',
+        routeProduct: ({ urlKey, sku }) => getProductLink(urlKey, sku),
+        onSearchResult: (items) => {
+          results.hidden = !items.length;
+          hint.textContent = items.length ? '' : 'Nenhum resultado. Tente outro termo.';
+        },
+        slots: {
+          Footer: (ctx) => {
+            const all = document.createElement('a');
+            all.className = 'nav-search-all';
+            all.textContent = 'Ver todos os resultados';
+            all.href = resultsUrl(input.value.trim());
+            ctx.appendChild(all);
+            ctx.onChange((next) => { all.href = resultsUrl(next.variables?.phrase || ''); });
+          },
+        },
+      })(results);
+    })();
+    return loading;
+  };
+
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const phrase = input.value.trim();
+    timer = setTimeout(async () => {
+      await load();
+      if (phrase.length < 3) {
+        searchFn(null, { scope: 'popover' });
+        results.hidden = true;
+        hint.textContent = 'Digite pelo menos 3 letras.';
+        return;
+      }
+      hint.textContent = '';
+      searchFn({
+        phrase,
+        pageSize,
+        filter: [{ attribute: 'visibility', in: ['Search', 'Catalog, Search'] }],
+      }, { scope: 'popover' });
+    }, 250);
+  });
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (q) window.location.href = resultsUrl(q);
+  });
+
+  const toggle = (state) => {
+    const show = state ?? !panel.classList.contains('nav-tools-panel--show');
+    if (show) load();
+    panel.classList.toggle('nav-tools-panel--show', show);
+    button.setAttribute('aria-expanded', show);
+    if (show) input.focus();
+  };
+  button.addEventListener('click', () => toggle());
+  document.addEventListener('click', (e) => {
+    if (panel.classList.contains('nav-tools-panel--show') && !panel.contains(e.target) && !button.contains(e.target)) toggle(false);
+  });
+  panel.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      toggle(false);
+      button.focus();
+    }
+  });
+  return { close: () => toggle(false) };
+}
+
 export default async function decorate(block) {
   const sellerBanner = await renderSellerAssistedBuyingBanner();
   if (sellerBanner && !document.querySelector('.seller-assisted-buying-banner')) {
@@ -306,14 +417,19 @@ export default async function decorate(block) {
     .find((a) => new URL(a.href, window.location.href).pathname.startsWith('/customer/'));
   if (account) {
     const guestLabel = account.textContent.trim();
+    // mobile shows only a person icon (the label stays as the accessible name)
+    account.classList.add('nav-cta--account');
+    account.innerHTML = `<span class="nav-cta-icon" aria-hidden="true">${USER}</span><span class="nav-cta-label"></span>`;
+    const label = account.querySelector('.nav-cta-label');
     const update = (signedIn) => {
-      account.textContent = signedIn ? 'Minha conta' : guestLabel;
+      label.textContent = signedIn ? 'Minha conta' : guestLabel;
       account.href = rootLink(signedIn ? '/customer/account' : '/customer/login');
     };
     update(checkIsAuthenticated());
     events.on('authenticated', update);
   }
   const miniCart = buildMiniCart(tools);
+  buildSearch(tools);
 
   const hamburger = document.createElement('button');
   hamburger.type = 'button';
