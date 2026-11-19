@@ -128,6 +128,40 @@
           }
         },
         {
+          "title": "Contratação de serviço (CEP + agenda)",
+          "id": "booking-flow",
+          "model": "booking-flow",
+          "filter": "booking-flow",
+          "plugins": {
+            "da": {
+              "name": "booking-flow",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Serviço",
+          "id": "booking-flow-item",
+          "model": "booking-flow-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "sku",
+                  "selector": "div:nth-child(1)"
+                },
+                {
+                  "name": "label",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
           "title": "Categorias (filtro dos cards)",
           "id": "cards-category",
           "model": "cards-category",

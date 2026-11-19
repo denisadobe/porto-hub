@@ -3,7 +3,7 @@ import { events } from '@dropins/tools/event-bus.js';
 
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchPlaceholders } from '../../scripts/commerce.js';
+import { checkIsAuthenticated, fetchPlaceholders, rootLink } from '../../scripts/commerce.js';
 
 import renderSellerAssistedBuyingBanner from './renderSellerAssistedBuyingBanner.js';
 
@@ -106,7 +106,15 @@ function buildMegamenu(li) {
   trigger.innerHTML = `<span class="nav-drop-label"></span><span class="nav-drop-icon">${CHEVRON}</span>`;
   trigger.querySelector('.nav-drop-label').textContent = label;
   item.append(trigger);
-  if (!content) return item;
+  if (!content) {
+    // a top-level item without a submenu is a plain link (e.g. "Catálogo")
+    const link = li.querySelector('a');
+    if (!link) return item;
+    item.className = 'nav-link-item';
+    link.className = 'nav-drop-trigger nav-drop-link';
+    item.replaceChildren(link);
+    return item;
+  }
 
   const panel = document.createElement('div');
   panel.className = 'nav-panel';
@@ -122,7 +130,8 @@ function buildMegamenu(li) {
 
   const tabs = [];
   [...content.children].forEach((entry) => {
-    const logoImg = entry.querySelector(':scope > a > img');
+    // brand logo entry: <a><img></a> locally; DA serves <p><a><picture><img></a></p>
+    const logoImg = entry.querySelector(':scope > a img, :scope > p > a img');
     if (logoImg && !entry.querySelector('ul')) {
       const brand = entry.querySelector('a');
       brand.className = 'nav-panel-brand';
@@ -292,6 +301,18 @@ export default async function decorate(block) {
     a.className = 'nav-cta';
     tools.append(a);
   });
+  // Commerce customer area: "Área do Cliente" -> login; signed in -> "Minha conta"
+  const account = [...tools.querySelectorAll('a')]
+    .find((a) => new URL(a.href, window.location.href).pathname.startsWith('/customer/'));
+  if (account) {
+    const guestLabel = account.textContent.trim();
+    const update = (signedIn) => {
+      account.textContent = signedIn ? 'Minha conta' : guestLabel;
+      account.href = rootLink(signedIn ? '/customer/account' : '/customer/login');
+    };
+    update(checkIsAuthenticated());
+    events.on('authenticated', update);
+  }
   const miniCart = buildMiniCart(tools);
 
   const hamburger = document.createElement('button');

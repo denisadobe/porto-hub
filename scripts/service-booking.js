@@ -1,5 +1,6 @@
 /*
- * Porto Serviço booking flow, shown on the product page instead of "Add to Cart":
+ * Porto Serviço booking flow (product page instead of "Add to Cart", and the service-booking
+ * block on landing pages):
  *   1. CEP          -> coverage check (App Builder `coverage`, address from ViaCEP)
  *   2. Dia e turno  -> available shifts (`slots`) and a 15-minute hold (`reserve`)
  *   3. Endereço     -> installation address and contact
@@ -11,8 +12,8 @@
  */
 import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 import * as cartApi from '@dropins/storefront-cart/api.js';
-import { loadCSS } from '../../scripts/aem.js';
-import { rootLink, checkIsAuthenticated } from '../../scripts/commerce.js';
+import { loadCSS } from './aem.js';
+import { rootLink, checkIsAuthenticated } from './commerce.js';
 
 const LOCAL_KEY = 'porto-booking';
 const SESSION_KEY = 'porto-booking-session';
@@ -253,7 +254,7 @@ async function prepareCart(sku, { reservation, coverage, address }) {
 /* ---------- UI ---------- */
 
 export default function renderServiceBooking(container, { getProduct }) {
-  loadCSS(`${window.hlx.codeBasePath}/blocks/product-details/service-booking.css`);
+  loadCSS(`${window.hlx.codeBasePath}/styles/service-booking.css`);
 
   const session = read(sessionStorage, SESSION_KEY);
   const state = {
@@ -358,6 +359,11 @@ export default function renderServiceBooking(container, { getProduct }) {
   function startTimer(output) {
     stopTimer();
     const tick = () => {
+      // the flow was replaced (e.g. another service picked on a landing page)
+      if (!root.isConnected) {
+        stopTimer();
+        return;
+      }
       const left = state.reservation ? Date.parse(state.reservation.expiresAt) - Date.now() : 0;
       if (left <= 0) {
         stopTimer();

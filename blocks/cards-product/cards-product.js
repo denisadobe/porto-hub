@@ -372,7 +372,21 @@ export default async function decorate(block) {
   // Authored content renders first; live Commerce data is merged in when it arrives.
   // Not in the editor: there the authored fields are what is edited (and saved), so they must
   // not be replaced by catalog values; the SKU label shows which product a card is bound to.
-  if (IS_UE) return;
+  if (IS_UE) {
+    // Editor preview/navigation: the authored CTA still points to the original site. Send the
+    // click to the demo product page of the card's SKU instead, without changing the authored
+    // (saved) link.
+    block.addEventListener('click', async (e) => {
+      const link = e.target.closest('.cards-product-cta a');
+      const sku = link?.closest('li')?.dataset.sku;
+      if (!sku) return;
+      e.preventDefault();
+      const product = (await fetchProducts([sku])).get(sku);
+      if (product) window.location.assign(getProductLink(product.urlKey, product.sku));
+      else window.open(link.href, '_blank', 'noopener');
+    });
+    return;
+  }
   const skus = [...new Set(cards.map((card) => card.dataset.sku).filter(Boolean))];
   if (!skus.length) return;
   block.setAttribute('aria-busy', 'true');

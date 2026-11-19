@@ -727,3 +727,12 @@ header .nav-overlay {
     display: block;
   }
 }
+
+/* top-level menu item without a submenu (e.g. "Catálogo"): same look as the triggers */
+header a.nav-drop-trigger.nav-drop-link {
+  text-decoration: none;
+}
+
+header a.nav-drop-trigger.nav-drop-link:hover {
+  text-decoration: underline;
+}

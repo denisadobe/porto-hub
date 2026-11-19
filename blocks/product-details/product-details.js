@@ -30,7 +30,7 @@ import { getConfigValue } from '@dropins/tools/lib/aem/configs.js';
 
 // Libs
 import { rootLink, fetchPlaceholders } from '../../scripts/commerce.js';
-import renderServiceBooking from './service-booking.js';
+import renderServiceBooking from '../../scripts/service-booking.js';
 
 // Initializers
 import { IMAGES_SIZES } from '../../scripts/initializers/pdp.js';

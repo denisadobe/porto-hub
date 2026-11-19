@@ -60,7 +60,7 @@ No events are emitted by this block. -->
 
 ## Porto Serviço booking flow
 
-When `config.json` has `public.default["porto-booking"].api` (the App Builder Stage base URL), the quantity selector and **Add to Cart** are replaced by the booking flow in `service-booking.js` / `service-booking.css`:
+When `config.json` has `public.default["porto-booking"].api` (the App Builder Stage base URL), the quantity selector and **Add to Cart** are replaced by the booking flow in `scripts/service-booking.js` / `styles/service-booking.css` (shared with the `service-booking` block):
 
 1. **CEP**: coverage check (App Builder `coverage`, address from ViaCEP). Not-served CEPs get a message; the last CEP is remembered.
 2. **Dia e turno**: next 14 days with shifts (`slots`). Choosing a shift holds it for 15 minutes (`reserve`, max 2 holds per browser); changing it releases the previous hold.

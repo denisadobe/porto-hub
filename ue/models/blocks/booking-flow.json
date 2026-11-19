@@ -1,0 +1,58 @@
+{
+  "definitions": [
+    {
+      "title": "Contratação de serviço (CEP + agenda)",
+      "id": "booking-flow",
+      "model": "booking-flow",
+      "filter": "booking-flow",
+      "plugins": {
+        "da": {
+          "name": "booking-flow",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Serviço",
+      "id": "booking-flow-item",
+      "model": "booking-flow-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            { "name": "sku", "selector": "div:nth-child(1)" },
+            { "name": "label", "selector": "div:nth-child(2)" }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    { "id": "booking-flow", "fields": [] },
+    {
+      "id": "booking-flow-item",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "sku",
+          "label": "SKU do serviço no Commerce",
+          "required": true,
+          "description": "Nome, foto e preço vêm do Commerce. O cliente agenda e vai ao checkout sem sair da página."
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "label",
+          "label": "Nome exibido (opcional)",
+          "description": "Deixe em branco para usar o nome do catálogo."
+        }
+      ]
+    }
+  ],
+  "filters": [
+    { "id": "booking-flow", "components": ["booking-flow-item"] }
+  ]
+}

@@ -110,6 +110,30 @@
     ]
   },
   {
+    "id": "booking-flow",
+    "fields": []
+  },
+  {
+    "id": "booking-flow-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "sku",
+        "label": "SKU do serviço no Commerce",
+        "required": true,
+        "description": "Nome, foto e preço vêm do Commerce. O cliente agenda e vai ao checkout sem sair da página."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Nome exibido (opcional)",
+        "description": "Deixe em branco para usar o nome do catálogo."
+      }
+    ]
+  },
+  {
     "id": "cards-category",
     "fields": []
   },

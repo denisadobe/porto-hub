@@ -18,7 +18,8 @@
       "columns-video",
       "accordion-faq",
       "cards-contact",
-      "accordion-link-list"
+      "accordion-link-list",
+      "booking-flow"
     ]
   },
   {
@@ -31,6 +32,12 @@
     "id": "accordion-link-list",
     "components": [
       "accordion-link-list-item"
+    ]
+  },
+  {
+    "id": "booking-flow",
+    "components": [
+      "booking-flow-item"
     ]
   },
   {

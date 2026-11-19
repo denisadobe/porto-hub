@@ -428,3 +428,7 @@
     width: auto;
   }
 }
+
+.service-booking .service-booking__cep .service-booking__row {
+  max-width: 480px;
+}
