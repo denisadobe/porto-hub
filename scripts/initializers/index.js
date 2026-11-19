@@ -146,12 +146,20 @@ const persistCartDataInSession = (data) => {
   }
 };
 
+// Integer sizes for image URLs. The drop-ins call every mapper, even for sizes the slot did not
+// set (value undefined): Math.floor(undefined) gave "height=NaN", and the Commerce image service
+// answers that with a tiny placeholder (colored squares in cart, checkout and search results).
+// Missing or invalid sizes are left out of the URL instead.
+const toInt = (value) => {
+  const n = Math.floor(Number(value));
+  return Number.isFinite(n) && n > 0 ? n : undefined;
+};
+
 const setupAemAssetsImageParams = () => {
   if (isAemAssetsEnabled()) {
-    // Convert decimal values to integers for AEM Assets compatibility
     initializers.setImageParamKeys({
-      width: (value) => ['width', Math.floor(value)],
-      height: (value) => ['height', Math.floor(value)],
+      width: (value) => ['width', toInt(value)],
+      height: (value) => ['height', toInt(value)],
       quality: 'quality',
       auto: 'auto',
       crop: 'crop',
