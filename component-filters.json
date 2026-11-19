@@ -19,7 +19,16 @@
       "accordion-faq",
       "cards-contact",
       "accordion-link-list",
-      "booking-flow"
+      "booking-flow",
+      "product-list-page",
+      "product-details",
+      "product-recommendations",
+      "enrichment",
+      "cards",
+      "hero",
+      "columns",
+      "accordion",
+      "carousel"
     ]
   },
   {
@@ -32,6 +41,24 @@
     "id": "accordion-link-list",
     "components": [
       "accordion-link-list-item"
+    ]
+  },
+  {
+    "id": "cards",
+    "components": [
+      "card"
+    ]
+  },
+  {
+    "id": "accordion",
+    "components": [
+      "accordion-item"
+    ]
+  },
+  {
+    "id": "carousel",
+    "components": [
+      "carousel-slide"
     ]
   },
   {

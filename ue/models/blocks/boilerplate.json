@@ -1,0 +1,283 @@
+{
+  "definitions": [
+    {
+      "title": "Cards",
+      "id": "cards",
+      "model": "cards",
+      "filter": "cards",
+      "plugins": {
+        "da": {
+          "name": "cards",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Card",
+      "id": "card",
+      "model": "card",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div:nth-child(1)>picture>img[src]"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div:nth-child(1)>picture>img[alt]"
+            },
+            {
+              "name": "text",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Hero",
+      "id": "hero",
+      "model": "hero",
+      "plugins": {
+        "da": {
+          "name": "hero",
+          "rows": 1,
+          "columns": 1,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div>div>picture>img[src]"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div>div>picture>img[alt]"
+            },
+            {
+              "name": "text",
+              "selector": "div>div"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Colunas",
+      "id": "columns",
+      "model": "columns",
+      "plugins": {
+        "da": {
+          "name": "columns",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Acordeão",
+      "id": "accordion",
+      "model": "accordion",
+      "filter": "accordion",
+      "plugins": {
+        "da": {
+          "name": "accordion",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Item do acordeão",
+      "id": "accordion-item",
+      "model": "accordion-item",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "summary",
+              "selector": "div:nth-child(1)"
+            },
+            {
+              "name": "text",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "title": "Carrossel",
+      "id": "carousel",
+      "model": "carousel",
+      "filter": "carousel",
+      "plugins": {
+        "da": {
+          "name": "carousel",
+          "rows": 1,
+          "columns": 2
+        }
+      }
+    },
+    {
+      "title": "Slide",
+      "id": "carousel-slide",
+      "model": "carousel-slide",
+      "plugins": {
+        "da": {
+          "rows": 1,
+          "columns": 2,
+          "fields": [
+            {
+              "name": "image",
+              "selector": "div:nth-child(1)>picture>img[src]"
+            },
+            {
+              "name": "imageAlt",
+              "selector": "div:nth-child(1)>picture>img[alt]"
+            },
+            {
+              "name": "text",
+              "selector": "div:nth-child(2)"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cards",
+      "fields": []
+    },
+    {
+      "id": "card",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Imagem",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Texto alternativo"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Texto",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "hero",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Imagem",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Texto alternativo"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Texto",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "columns",
+      "fields": []
+    },
+    {
+      "id": "accordion",
+      "fields": []
+    },
+    {
+      "id": "accordion-item",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "summary",
+          "label": "Título"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Conteúdo",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "carousel",
+      "fields": []
+    },
+    {
+      "id": "carousel-slide",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Imagem",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Texto alternativo"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "text",
+          "label": "Texto",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "cards",
+      "components": [
+        "card"
+      ]
+    },
+    {
+      "id": "accordion",
+      "components": [
+        "accordion-item"
+      ]
+    },
+    {
+      "id": "carousel",
+      "components": [
+        "carousel-slide"
+      ]
+    }
+  ]
+}

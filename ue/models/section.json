@@ -45,7 +45,16 @@
         "accordion-faq",
         "cards-contact",
         "accordion-link-list",
-        "booking-flow"
+        "booking-flow",
+        "product-list-page",
+        "product-details",
+        "product-recommendations",
+        "enrichment",
+        "cards",
+        "hero",
+        "columns",
+        "accordion",
+        "carousel"
       ]
     }
   ]

@@ -128,6 +128,154 @@
           }
         },
         {
+          "title": "Cards",
+          "id": "cards",
+          "model": "cards",
+          "filter": "cards",
+          "plugins": {
+            "da": {
+              "name": "cards",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Card",
+          "id": "card",
+          "model": "card",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:nth-child(1)>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:nth-child(1)>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Hero",
+          "id": "hero",
+          "model": "hero",
+          "plugins": {
+            "da": {
+              "name": "hero",
+              "rows": 1,
+              "columns": 1,
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div>div>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div>div>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div>div"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Colunas",
+          "id": "columns",
+          "model": "columns",
+          "plugins": {
+            "da": {
+              "name": "columns",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Acordeão",
+          "id": "accordion",
+          "model": "accordion",
+          "filter": "accordion",
+          "plugins": {
+            "da": {
+              "name": "accordion",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Item do acordeão",
+          "id": "accordion-item",
+          "model": "accordion-item",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "summary",
+                  "selector": "div:nth-child(1)"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Carrossel",
+          "id": "carousel",
+          "model": "carousel",
+          "filter": "carousel",
+          "plugins": {
+            "da": {
+              "name": "carousel",
+              "rows": 1,
+              "columns": 2
+            }
+          }
+        },
+        {
+          "title": "Slide",
+          "id": "carousel-slide",
+          "model": "carousel-slide",
+          "plugins": {
+            "da": {
+              "rows": 1,
+              "columns": 2,
+              "fields": [
+                {
+                  "name": "image",
+                  "selector": "div:nth-child(1)>picture>img[src]"
+                },
+                {
+                  "name": "imageAlt",
+                  "selector": "div:nth-child(1)>picture>img[alt]"
+                },
+                {
+                  "name": "text",
+                  "selector": "div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
           "title": "Contratação de serviço (CEP + agenda)",
           "id": "booking-flow",
           "model": "booking-flow",
@@ -368,6 +516,474 @@
                   "selector": "div>div"
                 }
               ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Commerce",
+      "id": "commerce",
+      "components": [
+        {
+          "title": "Lista de produtos (categoria ou busca)",
+          "id": "product-list-page",
+          "model": "product-list-page",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"product-list-page\"><div><div>urlPath</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "urlPath",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Detalhes do produto",
+          "id": "product-details",
+          "model": "product-details",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"product-details\"><div><div>defaultSku</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "defaultSku",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Recomendações de produtos",
+          "id": "product-recommendations",
+          "model": "product-recommendations",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"product-recommendations\"><div><div>recId</div><div></div></div><div><div>currentSku</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "recId",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                },
+                {
+                  "name": "currentSku",
+                  "selector": "div:nth-child(2)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Enriquecimento de conteúdo (Commerce)",
+          "id": "enrichment",
+          "model": "enrichment",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"enrichment\"><div><div>type</div><div></div></div><div><div>position</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "type",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                },
+                {
+                  "name": "position",
+                  "selector": "div:nth-child(2)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Conta: cabeçalho",
+          "id": "commerce-account-header",
+          "model": "commerce-account-header",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-account-header\"><div><div>Title</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "title",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Conta: endereços",
+          "id": "commerce-addresses",
+          "model": "commerce-addresses",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-addresses\"><div><div>Minified view</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "minifiedView",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Conta: pedidos",
+          "id": "commerce-orders-list",
+          "model": "commerce-orders-list",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-orders-list\"><div><div>Minified view</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "minifiedView",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Conta: devoluções",
+          "id": "commerce-returns-list",
+          "model": "commerce-returns-list",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-returns-list\"><div><div>Minified view</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "minifiedView",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Conta: confirmação de cadastro",
+          "id": "commerce-confirm-account",
+          "model": "commerce-confirm-account",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-confirm-account\"><div><div>Subpage</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "subpage",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Lista de desejos",
+          "id": "commerce-wishlist",
+          "model": "commerce-wishlist",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-wishlist\"><div><div>Start Shopping URL</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "startShoppingUrl",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Minicarrinho",
+          "id": "commerce-mini-cart",
+          "model": "commerce-mini-cart",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-mini-cart\"><div><div>Start Shopping URL</div><div></div></div><div><div>Cart URL</div><div></div></div><div><div>Checkout URL</div><div></div></div><div><div>Enable Updating Product</div><div></div></div><div><div>Undo Remove Item</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "startShoppingUrl",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                },
+                {
+                  "name": "cartUrl",
+                  "selector": "div:nth-child(2)>div:nth-child(2)"
+                },
+                {
+                  "name": "checkoutUrl",
+                  "selector": "div:nth-child(3)>div:nth-child(2)"
+                },
+                {
+                  "name": "enableUpdatingProduct",
+                  "selector": "div:nth-child(4)>div:nth-child(2)"
+                },
+                {
+                  "name": "undoRemoveItem",
+                  "selector": "div:nth-child(5)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Carrinho",
+          "id": "commerce-cart",
+          "model": "commerce-cart",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-cart\"><div><div>Enable Item Quantity Update</div><div></div></div><div><div>Enable Item Remove</div><div></div></div><div><div>Hide Heading</div><div></div></div><div><div>Enable Estimate Shipping</div><div></div></div><div><div>Checkout URL</div><div></div></div><div><div>Start Shopping URL</div><div></div></div><div><div>Agreement name</div><div></div></div><div><div>Agreement link</div><div></div></div><div><div>Enable Updating Product</div><div></div></div><div><div>Undo Remove Item</div><div></div></div></div>",
+              "fields": [
+                {
+                  "name": "enableItemQuantityUpdate",
+                  "selector": "div:nth-child(1)>div:nth-child(2)"
+                },
+                {
+                  "name": "enableItemRemove",
+                  "selector": "div:nth-child(2)>div:nth-child(2)"
+                },
+                {
+                  "name": "hideHeading",
+                  "selector": "div:nth-child(3)>div:nth-child(2)"
+                },
+                {
+                  "name": "enableEstimateShipping",
+                  "selector": "div:nth-child(4)>div:nth-child(2)"
+                },
+                {
+                  "name": "checkoutUrl",
+                  "selector": "div:nth-child(5)>div:nth-child(2)"
+                },
+                {
+                  "name": "startShoppingUrl",
+                  "selector": "div:nth-child(6)>div:nth-child(2)"
+                },
+                {
+                  "name": "agreementName",
+                  "selector": "div:nth-child(7)>div:nth-child(2)"
+                },
+                {
+                  "name": "agreementLink",
+                  "selector": "div:nth-child(8)>div:nth-child(2)"
+                },
+                {
+                  "name": "enableUpdatingProduct",
+                  "selector": "div:nth-child(9)>div:nth-child(2)"
+                },
+                {
+                  "name": "undoRemoveItem",
+                  "selector": "div:nth-child(10)>div:nth-child(2)"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "title": "Checkout",
+          "id": "commerce-checkout",
+          "model": "commerce-checkout",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-checkout\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: login",
+          "id": "commerce-login",
+          "model": "commerce-login",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-login\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: criar conta",
+          "id": "commerce-create-account",
+          "model": "commerce-create-account",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-create-account\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: esqueci a senha",
+          "id": "commerce-forgot-password",
+          "model": "commerce-forgot-password",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-forgot-password\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: criar nova senha",
+          "id": "commerce-create-password",
+          "model": "commerce-create-password",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-create-password\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: menu lateral",
+          "id": "commerce-account-sidebar",
+          "model": "commerce-account-sidebar",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-account-sidebar\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Conta: dados do cliente",
+          "id": "commerce-customer-information",
+          "model": "commerce-customer-information",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-customer-information\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: dados do cliente",
+          "id": "commerce-customer-details",
+          "model": "commerce-customer-details",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-customer-details\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: cabeçalho",
+          "id": "commerce-order-header",
+          "model": "commerce-order-header",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-header\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: status",
+          "id": "commerce-order-status",
+          "model": "commerce-order-status",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-status\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: itens",
+          "id": "commerce-order-product-list",
+          "model": "commerce-order-product-list",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-product-list\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: resumo de valores",
+          "id": "commerce-order-cost-summary",
+          "model": "commerce-order-cost-summary",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-cost-summary\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: comentários",
+          "id": "commerce-order-comments",
+          "model": "commerce-order-comments",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-comments\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: devoluções",
+          "id": "commerce-order-returns",
+          "model": "commerce-order-returns",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-order-returns\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: opções de presente",
+          "id": "commerce-gift-options",
+          "model": "commerce-gift-options",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-gift-options\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Pedido: entrega",
+          "id": "commerce-shipping-status",
+          "model": "commerce-shipping-status",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-shipping-status\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Consultar pedido",
+          "id": "commerce-search-order",
+          "model": "commerce-search-order",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-search-order\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Criar devolução",
+          "id": "commerce-create-return",
+          "model": "commerce-create-return",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-create-return\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Devolução: cabeçalho",
+          "id": "commerce-return-header",
+          "model": "commerce-return-header",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-return-header\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Compra assistida: atividade",
+          "id": "commerce-seller-assisted-buying-activity",
+          "model": "commerce-seller-assisted-buying-activity",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-seller-assisted-buying-activity\"><div><div></div></div></div>"
+            }
+          }
+        },
+        {
+          "title": "Compra assistida: configurações",
+          "id": "commerce-seller-assisted-buying-settings",
+          "model": "commerce-seller-assisted-buying-settings",
+          "plugins": {
+            "da": {
+              "unsafeHTML": "<div class=\"commerce-seller-assisted-buying-settings\"><div><div></div></div></div>"
             }
           }
         }

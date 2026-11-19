@@ -14,6 +14,7 @@ import {
   readBlockConfig,
 } from './aem.js';
 import initializeDropins from './initializers/index.js';
+import { IS_UE } from './ue-utils.js';
 
 let consentGranted = false;
 
@@ -695,7 +696,9 @@ export function getProductLink(urlKey, sku) {
  * @returns {string|null} The SKU from metadata, url, or block config
  */
 export function getProductSku() {
-  if (IS_DA || IS_EW) {
+  // authoring (DA preview, Experience Workspace, Universal Editor): the template page has no SKU
+  // in its URL, so use the product-details block's defaultSku
+  if (IS_DA || IS_EW || IS_UE) {
     return getMetadata('sku') || getDefaultSkuFromBlock();
   }
   return getMetadata('sku') || getSkuFromUrl();

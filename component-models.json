@@ -110,6 +110,115 @@
     ]
   },
   {
+    "id": "cards",
+    "fields": []
+  },
+  {
+    "id": "card",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Texto alternativo"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Texto",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "hero",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Texto alternativo"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Texto",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "columns",
+    "fields": []
+  },
+  {
+    "id": "accordion",
+    "fields": []
+  },
+  {
+    "id": "accordion-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "summary",
+        "label": "Título"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Conteúdo",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "carousel",
+    "fields": []
+  },
+  {
+    "id": "carousel-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Imagem",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Texto alternativo"
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Texto",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "booking-flow",
     "fields": []
   },
@@ -299,5 +408,435 @@
         "value": "Encontre o serviço que precisa"
       }
     ]
+  },
+  {
+    "id": "product-list-page",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "urlPath",
+        "label": "Caminho da categoria",
+        "description": "Ex.: apparel. Em branco = página de resultados da busca."
+      }
+    ]
+  },
+  {
+    "id": "product-details",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "defaultSku",
+        "label": "SKU padrão",
+        "description": "Usado quando a URL não traz o SKU (ex.: no editor)."
+      }
+    ]
+  },
+  {
+    "id": "product-recommendations",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "recId",
+        "label": "ID da unidade de recomendação",
+        "description": "Criada em Marketing > Product Recommendations no Commerce."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "currentSku",
+        "label": "SKU de contexto (opcional)"
+      }
+    ]
+  },
+  {
+    "id": "enrichment",
+    "fields": [
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "type",
+        "label": "Tipo",
+        "options": [
+          {
+            "name": "Produto",
+            "value": "Product"
+          },
+          {
+            "name": "Categoria",
+            "value": "category"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "position",
+        "label": "Posição",
+        "description": "Ex.: below-product, below-category"
+      }
+    ]
+  },
+  {
+    "id": "commerce-account-header",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Título"
+      }
+    ]
+  },
+  {
+    "id": "commerce-addresses",
+    "fields": [
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "minifiedView",
+        "label": "Visão resumida",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "commerce-orders-list",
+    "fields": [
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "minifiedView",
+        "label": "Visão resumida",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "commerce-returns-list",
+    "fields": [
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "minifiedView",
+        "label": "Visão resumida",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "commerce-confirm-account",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "subpage",
+        "label": "Subpágina"
+      }
+    ]
+  },
+  {
+    "id": "commerce-wishlist",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "startShoppingUrl",
+        "label": "Link \"Começar a comprar\""
+      }
+    ]
+  },
+  {
+    "id": "commerce-mini-cart",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "startShoppingUrl",
+        "label": "Link \"Começar a comprar\""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "cartUrl",
+        "label": "Link do carrinho"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "checkoutUrl",
+        "label": "Link do checkout"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "enableUpdatingProduct",
+        "label": "Permitir editar o produto",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "undoRemoveItem",
+        "label": "Permitir desfazer remoção",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "commerce-cart",
+    "fields": [
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "enableItemQuantityUpdate",
+        "label": "Permitir alterar quantidade",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "enableItemRemove",
+        "label": "Permitir remover itens",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "hideHeading",
+        "label": "Ocultar título",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "enableEstimateShipping",
+        "label": "Mostrar estimativa de frete",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "checkoutUrl",
+        "label": "Link do checkout"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "startShoppingUrl",
+        "label": "Link \"Começar a comprar\""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "agreementName",
+        "label": "Nome do termo"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "agreementLink",
+        "label": "Link do termo"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "enableUpdatingProduct",
+        "label": "Permitir editar o produto",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "undoRemoveItem",
+        "label": "Permitir desfazer remoção",
+        "options": [
+          {
+            "name": "Sim",
+            "value": "true"
+          },
+          {
+            "name": "Não",
+            "value": "false"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "commerce-checkout",
+    "fields": []
+  },
+  {
+    "id": "commerce-login",
+    "fields": []
+  },
+  {
+    "id": "commerce-create-account",
+    "fields": []
+  },
+  {
+    "id": "commerce-forgot-password",
+    "fields": []
+  },
+  {
+    "id": "commerce-create-password",
+    "fields": []
+  },
+  {
+    "id": "commerce-account-sidebar",
+    "fields": []
+  },
+  {
+    "id": "commerce-customer-information",
+    "fields": []
+  },
+  {
+    "id": "commerce-customer-details",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-header",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-status",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-product-list",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-cost-summary",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-comments",
+    "fields": []
+  },
+  {
+    "id": "commerce-order-returns",
+    "fields": []
+  },
+  {
+    "id": "commerce-gift-options",
+    "fields": []
+  },
+  {
+    "id": "commerce-shipping-status",
+    "fields": []
+  },
+  {
+    "id": "commerce-search-order",
+    "fields": []
+  },
+  {
+    "id": "commerce-create-return",
+    "fields": []
+  },
+  {
+    "id": "commerce-return-header",
+    "fields": []
+  },
+  {
+    "id": "commerce-seller-assisted-buying-activity",
+    "fields": []
+  },
+  {
+    "id": "commerce-seller-assisted-buying-settings",
+    "fields": []
   }
 ]

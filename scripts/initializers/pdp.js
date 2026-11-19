@@ -3,6 +3,7 @@ import { Image, provider as UI } from '@dropins/tools/components.js';
 import { initialize, setEndpoint, fetchProductData } from '@dropins/storefront-pdp/api.js';
 import { isAemAssetsEnabled, tryGenerateAemAssetsOptimizedUrl } from '@dropins/tools/lib/aem/assets.js';
 import { initializeDropin } from './index.js';
+import { IS_UE } from '../ue-utils.js';
 import {
   CS_FETCH_GRAPHQL,
   fetchPlaceholders,
@@ -47,7 +48,7 @@ await initializeDropin(async () => {
   const sku = getProductSku();
   const optionsUIDs = getOptionsUIDsFromUrl();
 
-  if (!sku && !IS_DA && !IS_EW) {
+  if (!sku && !IS_DA && !IS_EW && !IS_UE) {
     return loadErrorPage();
   }
 
